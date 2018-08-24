@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="IPOSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="IPOSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Partner">
           <Key>
             <PropertyRef Name="ID" />
@@ -63,6 +63,8 @@
           <Property Name="Name" Type="nvarchar" MaxLength="200" />
           <Property Name="Product_Category_ID" Type="int" />
           <Property Name="Base_Unit_ID" Type="int" />
+          <Property Name="Min_Quota" Type="int" />
+          <Property Name="Max_Quota" Type="int" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -176,8 +178,7 @@
           <EntitySet Name="User_Permission" EntityType="Self.User_Permission" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="IPOSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -230,15 +231,6 @@
           <Property Name="Original_Price" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Base_Product_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="QuantityPerUnit" Type="Int32" />
-        </EntityType>
-        <EntityType Name="Products">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int64" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Product_Category_ID" Type="Int32" />
-          <Property Name="Base_Unit_ID" Type="Int32" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -341,7 +333,6 @@
           <EntitySet Name="Product_Categories" EntityType="Self.Product_Categories" />
           <EntitySet Name="Product_Image" EntityType="Self.Product_Image" />
           <EntitySet Name="Product_Unit" EntityType="Self.Product_Unit" />
-          <EntitySet Name="Products" EntityType="Self.Products" />
           <EntitySet Name="Role" EntityType="Self.Role" />
           <EntitySet Name="Role_Permission" EntityType="Self.Role_Permission" />
           <EntitySet Name="Shop" EntityType="Self.Shop" />
@@ -351,7 +342,19 @@
           <EntitySet Name="Transaction_Type_Group" EntityType="Self.Transaction_Type_Group" />
           <EntitySet Name="User_Permission" EntityType="Self.User_Permission" />
           <EntitySet Name="Users" EntityType="Self.Users" />
+          <EntitySet Name="Products" EntityType="IPOSModel.Products" />
         </EntityContainer>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Product_Category_ID" Type="Int32" />
+          <Property Name="Base_Unit_ID" Type="Int32" />
+          <Property Name="Min_Quota" Type="Int32" />
+          <Property Name="Max_Quota" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -410,16 +413,6 @@
                 <ScalarProperty Name="Original_Price" ColumnName="Original_Price" />
                 <ScalarProperty Name="Base_Product_Code" ColumnName="Base_Product_Code" />
                 <ScalarProperty Name="QuantityPerUnit" ColumnName="QuantityPerUnit" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Products">
-            <EntityTypeMapping TypeName="IPOSModel.Products">
-              <MappingFragment StoreEntitySet="Products">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Product_Category_ID" ColumnName="Product_Category_ID" />
-                <ScalarProperty Name="Base_Unit_ID" ColumnName="Base_Unit_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -520,6 +513,18 @@
                 <ScalarProperty Name="Role_ID" ColumnName="Role_ID" />
                 <ScalarProperty Name="Login_Time_Retrict" ColumnName="Login_Time_Retrict" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="IPOSModel.Products">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="Max_Quota" ColumnName="Max_Quota" />
+                <ScalarProperty Name="Min_Quota" ColumnName="Min_Quota" />
+                <ScalarProperty Name="Base_Unit_ID" ColumnName="Base_Unit_ID" />
+                <ScalarProperty Name="Product_Category_ID" ColumnName="Product_Category_ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

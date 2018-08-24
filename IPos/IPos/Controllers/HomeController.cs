@@ -9,7 +9,7 @@ namespace IPos.Controllers
 {
     public class HomeController : Controller
     {
-        public JsonResult CreateNewProduct(string barcode, string name, decimal group_id)
+        public JsonResult CreateNewProduct(string barcode, string name, decimal category_id, decimal original_price, decimal sell price,)
         {
             using (IPosEntities ctx = new IPosEntities())
             {

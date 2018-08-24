@@ -1,17 +1,21 @@
 ﻿--Drop database [IPOS];
-Create  database [IPOS];
+--Create  database [IPOS];
 Use IPOS;
 
 --Create table
 ---Product
+drop table Products;
 create table Products(
 	ID bigint,
 	[Name] nvarchar(200),
 	Product_Category_ID int,
 	Base_Unit_ID int,
+	Min_Quota int,
+	Max_Quota int,
 	constraint Products_P primary key(ID)
 );
 ---Product_Group: Nhóm sản phẩm (1 sản phẩm được tạo thành từ nhiều loại sp khác)
+drop table Product_Categories;
 create table Product_Categories(
 	ID bigint,
 	[Name] nvarchar(200),
@@ -19,6 +23,7 @@ create table Product_Categories(
 	constraint Product_Group_P primary key(ID)	
 );
 ---Product_Image
+drop table Product_Image;
 create table Product_Image(
 	 ID bigint,
 	 Product_ID varchar(50),
@@ -27,6 +32,7 @@ create table Product_Image(
 	 constraint Product_Image_P primary key(ID)
 );
 ---Product_Unit
+drop table Product_Unit;
 Create table Product_Unit(
 	Product_Code varchar(50),
 	Product_ID bigint,
@@ -38,6 +44,7 @@ Create table Product_Unit(
 	constraint Product_Unit_P primary key(Product_Code)
 );
 ---Transaction_Detail
+drop table Transaction_Detail;
 create table Transaction_Detail(
 	Transaction_Code varchar(50),
 	Product_Code bigint,
@@ -47,6 +54,7 @@ create table Transaction_Detail(
 	constraint Transaction_Detail_P primary key(Transaction_Code,Product_Code)
 );
 ---Transaction_Type_Group
+drop table Transaction_Type_Group;
 create table Transaction_Type_Group(
 	ID bigint,
 	Type varchar(50),
@@ -55,6 +63,7 @@ create table Transaction_Type_Group(
 );
 ---Transaction
 ----Transaction type: B-Bill, BR- Bill return, M Merchandise, MR - Merchandise return, D - Destroy, P - Payment
+drop table [Transaction];
 create table [Transaction](
 	code varchar(50),
 	[Type] varchar(50),
@@ -69,6 +78,7 @@ create table [Transaction](
 );
 ---Transaction_Payment
 ----Payment type: M - Cash, C - Card, D - Dept
+drop table Transaction_Payment;
 create table Transaction_Payment(
 	ID bigint,
 	Transaction_Code varchar(50),
@@ -78,6 +88,7 @@ create table Transaction_Payment(
 );
 ---Shop
 ----Partner type: C - Customer, S - Supplier
+drop table Shop;
 create table Shop(
 	ID bigint,
 	[Name] nvarchar(200),
@@ -88,6 +99,7 @@ create table Shop(
 	constraint Shop_P primary key(ID)
 );
 ---Partner
+drop table [Partner];
 create table [Partner](
 	ID bigint,
 	[Name] nvarchar(200),
@@ -100,6 +112,7 @@ create table [Partner](
 	constraint Partner_P primary key(ID)
 );
 ---Users
+drop table Users;
 create table Users(
 	Account varchar(50),
 	[Password] varchar(100),
@@ -114,12 +127,14 @@ create table Users(
 	constraint Users_P primary key(Account)
 );
 ---Role
+drop table [Role];
 create table [Role](
 	ID bigint,
 	[Name] nvarchar(200),
 	constraint Role_P primary key(ID)
 );
 ---User_Permission
+drop table User_Permission;
 create table User_Permission(
 	User_Account varchar(50),
 	Shop_ID bigint,
@@ -128,6 +143,7 @@ create table User_Permission(
 	constraint User_Permission_P primary key(User_Account,Shop_ID,Permission_Code)
 );
 ---Role_Permission
+drop table Role_Permission;
 create table Role_Permission(
 	Role_ID bigint,
 	Permission_Code varchar(50),
@@ -135,6 +151,7 @@ create table Role_Permission(
 	constraint Role_Permission_P primary key(Role_ID,Permission_Code)
 );
 ---Permission
+drop table Permission;
 create table Permission(
 	Code varchar(50),
 	[Name] nvarchar(50),
