@@ -1,0 +1,549 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="IPOSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Partner">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="Phone" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="200" />
+          <Property Name="Created_Time" Type="date" />
+          <Property Name="Created_User" Type="nvarchar" MaxLength="50" />
+          <Property Name="Type" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="Permission">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Parent_Code" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Product_Categories">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="Parent_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="Product_Image">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Product_Code" Type="varchar" MaxLength="50" />
+          <Property Name="Contents" Type="text" />
+          <Property Name="Number" Type="int" />
+        </EntityType>
+        <EntityType Name="Product_Unit">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Product_Code" Type="varchar" MaxLength="50" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="Sell_Price" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Original_Price" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Base_Unit_ID" Type="int" />
+          <Property Name="Number" Type="int" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="Product_Category_ID" Type="int" />
+          <Property Name="Base_Unit_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="Role_Permission">
+          <Key>
+            <PropertyRef Name="Role_ID" />
+            <PropertyRef Name="Permission_Code" />
+          </Key>
+          <Property Name="Role_ID" Type="int" Nullable="false" />
+          <Property Name="Permission_Code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Has_Permission" Type="bit" />
+        </EntityType>
+        <EntityType Name="Shop">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="Phone" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="200" />
+          <Property Name="Status" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="code" />
+          </Key>
+          <Property Name="code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="50" />
+          <Property Name="Type_Group_ID" Type="int" />
+          <Property Name="Created_Time" Type="date" />
+          <Property Name="Created_User" Type="varchar" MaxLength="50" />
+          <Property Name="Partner_ID" Type="int" />
+          <Property Name="Shop_ID" Type="int" />
+          <Property Name="Discount" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Note" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="Transaction_Detail">
+          <Key>
+            <PropertyRef Name="Transaction_Code" />
+            <PropertyRef Name="Product_Unit_ID" />
+          </Key>
+          <Property Name="Transaction_Code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Product_Unit_ID" Type="int" Nullable="false" />
+          <Property Name="Number" Type="int" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Total" Type="decimal" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="Transaction_Payment">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Transaction_Code" Type="varchar" MaxLength="50" />
+          <Property Name="Type" Type="varchar" MaxLength="50" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="Transaction_Type_Group">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="50" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="User_Permission">
+          <Key>
+            <PropertyRef Name="User_Account" />
+            <PropertyRef Name="Shop_ID" />
+            <PropertyRef Name="Permission_Code" />
+          </Key>
+          <Property Name="User_Account" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Shop_ID" Type="int" Nullable="false" />
+          <Property Name="Permission_Code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Has_Permission" Type="bit" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Account" />
+          </Key>
+          <Property Name="Account" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="100" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="Phone" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="200" />
+          <Property Name="Birthday" Type="int" />
+          <Property Name="Role_ID" Type="int" />
+          <Property Name="Login_Time_Retrict" Type="bit" />
+          <Property Name="Status" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <EntityContainer Name="IPOSModelStoreContainer">
+          <EntitySet Name="Partner" EntityType="Self.Partner" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Permission" EntityType="Self.Permission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product_Categories" EntityType="Self.Product_Categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product_Image" EntityType="Self.Product_Image" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product_Unit" EntityType="Self.Product_Unit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role_Permission" EntityType="Self.Role_Permission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Shop" EntityType="Self.Shop" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Transaction" EntityType="Self.Transaction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Transaction_Detail" EntityType="Self.Transaction_Detail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Transaction_Payment" EntityType="Self.Transaction_Payment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Transaction_Type_Group" EntityType="Self.Transaction_Type_Group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User_Permission" EntityType="Self.User_Permission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="IPOSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Partner">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Created_Time" Type="DateTime" Precision="0" />
+          <Property Name="Created_User" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Permission">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Parent_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Product_Categories">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Parent_ID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Product_Image">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Product_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Contents" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Number" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Product_Unit">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Product_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Sell_Price" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Original_Price" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Base_Unit_ID" Type="Int32" />
+          <Property Name="Number" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Product_Category_ID" Type="Int32" />
+          <Property Name="Base_Unit_ID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Role_Permission">
+          <Key>
+            <PropertyRef Name="Role_ID" />
+            <PropertyRef Name="Permission_Code" />
+          </Key>
+          <Property Name="Role_ID" Type="Int32" Nullable="false" />
+          <Property Name="Permission_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Has_Permission" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Shop">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="code" />
+          </Key>
+          <Property Name="code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Type_Group_ID" Type="Int32" />
+          <Property Name="Created_Time" Type="DateTime" Precision="0" />
+          <Property Name="Created_User" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Partner_ID" Type="Int32" />
+          <Property Name="Shop_ID" Type="Int32" />
+          <Property Name="Discount" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Transaction_Detail">
+          <Key>
+            <PropertyRef Name="Transaction_Code" />
+            <PropertyRef Name="Product_Unit_ID" />
+          </Key>
+          <Property Name="Transaction_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Product_Unit_ID" Type="Int32" Nullable="false" />
+          <Property Name="Number" Type="Int32" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Total" Type="Decimal" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="Transaction_Payment">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Transaction_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="Transaction_Type_Group">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="User_Permission">
+          <Key>
+            <PropertyRef Name="User_Account" />
+            <PropertyRef Name="Shop_ID" />
+            <PropertyRef Name="Permission_Code" />
+          </Key>
+          <Property Name="User_Account" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Shop_ID" Type="Int32" Nullable="false" />
+          <Property Name="Permission_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Has_Permission" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Account" />
+          </Key>
+          <Property Name="Account" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Birthday" Type="Int32" />
+          <Property Name="Role_ID" Type="Int32" />
+          <Property Name="Login_Time_Retrict" Type="Boolean" />
+          <Property Name="Status" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="IPOSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Partner" EntityType="Self.Partner" />
+          <EntitySet Name="Permission" EntityType="Self.Permission" />
+          <EntitySet Name="Product_Categories" EntityType="Self.Product_Categories" />
+          <EntitySet Name="Product_Image" EntityType="Self.Product_Image" />
+          <EntitySet Name="Product_Unit" EntityType="Self.Product_Unit" />
+          <EntitySet Name="Products" EntityType="Self.Products" />
+          <EntitySet Name="Role" EntityType="Self.Role" />
+          <EntitySet Name="Role_Permission" EntityType="Self.Role_Permission" />
+          <EntitySet Name="Shop" EntityType="Self.Shop" />
+          <EntitySet Name="Transaction" EntityType="Self.Transaction" />
+          <EntitySet Name="Transaction_Detail" EntityType="Self.Transaction_Detail" />
+          <EntitySet Name="Transaction_Payment" EntityType="Self.Transaction_Payment" />
+          <EntitySet Name="Transaction_Type_Group" EntityType="Self.Transaction_Type_Group" />
+          <EntitySet Name="User_Permission" EntityType="Self.User_Permission" />
+          <EntitySet Name="Users" EntityType="Self.Users" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="IPOSModelStoreContainer" CdmEntityContainer="IPOSEntities">
+          <EntitySetMapping Name="Partner">
+            <EntityTypeMapping TypeName="IPOSModel.Partner">
+              <MappingFragment StoreEntitySet="Partner">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Created_Time" ColumnName="Created_Time" />
+                <ScalarProperty Name="Created_User" ColumnName="Created_User" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Permission">
+            <EntityTypeMapping TypeName="IPOSModel.Permission">
+              <MappingFragment StoreEntitySet="Permission">
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Parent_Code" ColumnName="Parent_Code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Product_Categories">
+            <EntityTypeMapping TypeName="IPOSModel.Product_Categories">
+              <MappingFragment StoreEntitySet="Product_Categories">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Parent_ID" ColumnName="Parent_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Product_Image">
+            <EntityTypeMapping TypeName="IPOSModel.Product_Image">
+              <MappingFragment StoreEntitySet="Product_Image">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Product_Code" ColumnName="Product_Code" />
+                <ScalarProperty Name="Contents" ColumnName="Contents" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Product_Unit">
+            <EntityTypeMapping TypeName="IPOSModel.Product_Unit">
+              <MappingFragment StoreEntitySet="Product_Unit">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Product_Code" ColumnName="Product_Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Sell_Price" ColumnName="Sell_Price" />
+                <ScalarProperty Name="Original_Price" ColumnName="Original_Price" />
+                <ScalarProperty Name="Base_Unit_ID" ColumnName="Base_Unit_ID" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="IPOSModel.Products">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Product_Category_ID" ColumnName="Product_Category_ID" />
+                <ScalarProperty Name="Base_Unit_ID" ColumnName="Base_Unit_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Role">
+            <EntityTypeMapping TypeName="IPOSModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Role_Permission">
+            <EntityTypeMapping TypeName="IPOSModel.Role_Permission">
+              <MappingFragment StoreEntitySet="Role_Permission">
+                <ScalarProperty Name="Role_ID" ColumnName="Role_ID" />
+                <ScalarProperty Name="Permission_Code" ColumnName="Permission_Code" />
+                <ScalarProperty Name="Has_Permission" ColumnName="Has_Permission" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shop">
+            <EntityTypeMapping TypeName="IPOSModel.Shop">
+              <MappingFragment StoreEntitySet="Shop">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transaction">
+            <EntityTypeMapping TypeName="IPOSModel.Transaction">
+              <MappingFragment StoreEntitySet="Transaction">
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Type_Group_ID" ColumnName="Type_Group_ID" />
+                <ScalarProperty Name="Created_Time" ColumnName="Created_Time" />
+                <ScalarProperty Name="Created_User" ColumnName="Created_User" />
+                <ScalarProperty Name="Partner_ID" ColumnName="Partner_ID" />
+                <ScalarProperty Name="Shop_ID" ColumnName="Shop_ID" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transaction_Detail">
+            <EntityTypeMapping TypeName="IPOSModel.Transaction_Detail">
+              <MappingFragment StoreEntitySet="Transaction_Detail">
+                <ScalarProperty Name="Transaction_Code" ColumnName="Transaction_Code" />
+                <ScalarProperty Name="Product_Unit_ID" ColumnName="Product_Unit_ID" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transaction_Payment">
+            <EntityTypeMapping TypeName="IPOSModel.Transaction_Payment">
+              <MappingFragment StoreEntitySet="Transaction_Payment">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Transaction_Code" ColumnName="Transaction_Code" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transaction_Type_Group">
+            <EntityTypeMapping TypeName="IPOSModel.Transaction_Type_Group">
+              <MappingFragment StoreEntitySet="Transaction_Type_Group">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User_Permission">
+            <EntityTypeMapping TypeName="IPOSModel.User_Permission">
+              <MappingFragment StoreEntitySet="User_Permission">
+                <ScalarProperty Name="User_Account" ColumnName="User_Account" />
+                <ScalarProperty Name="Shop_ID" ColumnName="Shop_ID" />
+                <ScalarProperty Name="Permission_Code" ColumnName="Permission_Code" />
+                <ScalarProperty Name="Has_Permission" ColumnName="Has_Permission" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="IPOSModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Account" ColumnName="Account" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+                <ScalarProperty Name="Role_ID" ColumnName="Role_ID" />
+                <ScalarProperty Name="Login_Time_Retrict" ColumnName="Login_Time_Retrict" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -52,6 +52,8 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -183,6 +185,16 @@
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Models\IPosModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>IPosModel.edmx</DependentUpon>
+      <LastGenOutput>IPosModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\IPosModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>IPosModel.edmx</DependentUpon>
+      <LastGenOutput>IPosModel.cs</LastGenOutput>
+    </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="fonts\fontawesome-webfont.eot" />
@@ -200,6 +212,13 @@
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="admin-lte\css\adminlte.css.map" />
     <Content Include="admin-lte\css\adminlte.min.css.map" />
+    <EntityDeploy Include="Models\IPosModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>IPosModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\IPosModel.edmx.diagram">
+      <DependentUpon>IPosModel.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
@@ -217,6 +236,66 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IPosModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IPosModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IPosModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IPosModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IPosModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Partner.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Permission.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Products.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Product_Categories.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Product_Image.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Product_Unit.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Role.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Role_Permission.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Shop.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Transaction.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Transaction_Detail.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Transaction_Payment.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Transaction_Type_Group.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Users.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\User_Permission.cs">
+      <DependentUpon>IPosModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -238,8 +317,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
     <Folder Include="Views\Product\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
