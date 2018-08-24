@@ -14,12 +14,12 @@ namespace IPos.Models
     
     public partial class Product_Unit
     {
-        public int ID { get; set; }
         public string Product_Code { get; set; }
+        public Nullable<long> Product_ID { get; set; }
         public string Name { get; set; }
         public Nullable<decimal> Sell_Price { get; set; }
         public Nullable<decimal> Original_Price { get; set; }
-        public Nullable<int> Base_Unit_ID { get; set; }
-        public Nullable<int> Number { get; set; }
+        public string Base_Product_Code { get; set; }
+        public Nullable<int> QuantityPerUnit { get; set; }
     }
 }

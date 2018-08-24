@@ -14,8 +14,8 @@ namespace IPos.Models
     
     public partial class Product_Image
     {
-        public int ID { get; set; }
-        public string Product_Code { get; set; }
+        public long ID { get; set; }
+        public string Product_ID { get; set; }
         public string Contents { get; set; }
         public Nullable<int> Number { get; set; }
     }

@@ -14,7 +14,7 @@ namespace IPos.Models
     
     public partial class Products
     {
-        public string Code { get; set; }
+        public long ID { get; set; }
         public string Name { get; set; }
         public Nullable<int> Product_Category_ID { get; set; }
         public Nullable<int> Base_Unit_ID { get; set; }

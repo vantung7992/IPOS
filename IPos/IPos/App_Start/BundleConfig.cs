@@ -23,5 +23,6 @@ namespace IPos.App_Start
                 "~/Styles/Scripts/jquery-3.1.1.min.js",
                 "~/Scripts/bootstrap.min.js"
             ));
+        }
     }
 }

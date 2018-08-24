@@ -14,7 +14,7 @@ namespace IPos.Models
     
     public partial class Role_Permission
     {
-        public int Role_ID { get; set; }
+        public long Role_ID { get; set; }
         public string Permission_Code { get; set; }
         public Nullable<bool> Has_Permission { get; set; }
     }

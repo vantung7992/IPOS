@@ -15,7 +15,7 @@ namespace IPos.Models
     public partial class User_Permission
     {
         public string User_Account { get; set; }
-        public int Shop_ID { get; set; }
+        public long Shop_ID { get; set; }
         public string Permission_Code { get; set; }
         public Nullable<bool> Has_Permission { get; set; }
     }

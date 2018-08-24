@@ -47,7 +47,7 @@ namespace IPos.Controllers
         //Get product by code
         private Products GetProductbyCode(string ProductCode)
         {
-            using (var dbContext = new IPOSEntities())
+            using (var dbContext = new IPosEntities())
             {
                 return dbContext.Products.Where(x => x.Code == ProductCode).FirstOrDefault();
             }

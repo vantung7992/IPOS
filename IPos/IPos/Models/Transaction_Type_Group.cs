@@ -14,7 +14,7 @@ namespace IPos.Models
     
     public partial class Transaction_Type_Group
     {
-        public int ID { get; set; }
+        public long ID { get; set; }
         public string Type { get; set; }
         public string Name { get; set; }
     }

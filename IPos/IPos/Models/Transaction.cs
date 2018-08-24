@@ -19,8 +19,8 @@ namespace IPos.Models
         public Nullable<int> Type_Group_ID { get; set; }
         public Nullable<System.DateTime> Created_Time { get; set; }
         public string Created_User { get; set; }
-        public Nullable<int> Partner_ID { get; set; }
-        public Nullable<int> Shop_ID { get; set; }
+        public Nullable<long> Partner_ID { get; set; }
+        public Nullable<long> Shop_ID { get; set; }
         public Nullable<decimal> Discount { get; set; }
         public string Note { get; set; }
     }

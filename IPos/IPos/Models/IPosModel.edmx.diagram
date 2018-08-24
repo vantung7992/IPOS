@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="030054eefd484cf4bdb1484b78263cf3" Name="Diagram1">
+      <Diagram DiagramId="ba6429c5c3dc47aa986740dff5c66a74" Name="Diagram1">
         <EntityTypeShape EntityType="IPOSModel.Partner" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="IPOSModel.Permission" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="IPOSModel.Product_Categories" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />

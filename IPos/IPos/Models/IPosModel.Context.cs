@@ -13,10 +13,10 @@ namespace IPos.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class IPOSEntities : DbContext
+    public partial class IPosEntities : DbContext
     {
-        public IPOSEntities()
-            : base("name=IPOSEntities")
+        public IPosEntities()
+            : base("name=IPosEntities")
         {
         }
     

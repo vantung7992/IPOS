@@ -21,7 +21,7 @@ namespace IPos.Models
         public string Email { get; set; }
         public string Address { get; set; }
         public Nullable<int> Birthday { get; set; }
-        public Nullable<int> Role_ID { get; set; }
+        public Nullable<long> Role_ID { get; set; }
         public Nullable<bool> Login_Time_Retrict { get; set; }
         public string Status { get; set; }
     }

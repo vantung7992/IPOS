@@ -14,7 +14,7 @@ namespace IPos.Models
     
     public partial class Transaction_Payment
     {
-        public int ID { get; set; }
+        public long ID { get; set; }
         public string Transaction_Code { get; set; }
         public string Type { get; set; }
         public Nullable<decimal> Amount { get; set; }
