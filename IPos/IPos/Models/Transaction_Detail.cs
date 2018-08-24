@@ -15,7 +15,7 @@ namespace IPos.Models
     public partial class Transaction_Detail
     {
         public string Transaction_Code { get; set; }
-        public long Product_Code { get; set; }
+        public string Product_Code { get; set; }
         public Nullable<int> Quantity { get; set; }
         public Nullable<decimal> Price { get; set; }
         public Nullable<decimal> Total { get; set; }

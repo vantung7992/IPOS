@@ -62,7 +62,7 @@
           <Property Name="ID" Type="bigint" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="200" />
           <Property Name="Product_Category_ID" Type="int" />
-          <Property Name="Base_Unit_ID" Type="int" />
+          <Property Name="Base_Product_Code" Type="varchar" MaxLength="50" />
           <Property Name="Min_Quota" Type="int" />
           <Property Name="Max_Quota" Type="int" />
         </EntityType>
@@ -113,7 +113,7 @@
             <PropertyRef Name="Product_Code" />
           </Key>
           <Property Name="Transaction_Code" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Product_Code" Type="bigint" Nullable="false" />
+          <Property Name="Product_Code" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Quantity" Type="int" />
           <Property Name="Price" Type="decimal" Precision="18" Scale="0" />
           <Property Name="Total" Type="decimal" Precision="18" Scale="0" />
@@ -273,17 +273,6 @@
           <Property Name="Discount" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="Transaction_Detail">
-          <Key>
-            <PropertyRef Name="Transaction_Code" />
-            <PropertyRef Name="Product_Code" />
-          </Key>
-          <Property Name="Transaction_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Product_Code" Type="Int64" Nullable="false" />
-          <Property Name="Quantity" Type="Int32" />
-          <Property Name="Price" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Total" Type="Decimal" Precision="18" Scale="0" />
-        </EntityType>
         <EntityType Name="Transaction_Payment">
           <Key>
             <PropertyRef Name="ID" />
@@ -337,12 +326,12 @@
           <EntitySet Name="Role_Permission" EntityType="Self.Role_Permission" />
           <EntitySet Name="Shop" EntityType="Self.Shop" />
           <EntitySet Name="Transaction" EntityType="Self.Transaction" />
-          <EntitySet Name="Transaction_Detail" EntityType="Self.Transaction_Detail" />
           <EntitySet Name="Transaction_Payment" EntityType="Self.Transaction_Payment" />
           <EntitySet Name="Transaction_Type_Group" EntityType="Self.Transaction_Type_Group" />
           <EntitySet Name="User_Permission" EntityType="Self.User_Permission" />
           <EntitySet Name="Users" EntityType="Self.Users" />
           <EntitySet Name="Products" EntityType="IPOSModel.Products" />
+          <EntitySet Name="Transaction_Detail" EntityType="IPOSModel.Transaction_Detail" />
         </EntityContainer>
         <EntityType Name="Products">
           <Key>
@@ -351,9 +340,20 @@
           <Property Name="ID" Type="Int64" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Product_Category_ID" Type="Int32" />
-          <Property Name="Base_Unit_ID" Type="Int32" />
+          <Property Name="Base_Product_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Min_Quota" Type="Int32" />
           <Property Name="Max_Quota" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Transaction_Detail">
+          <Key>
+            <PropertyRef Name="Transaction_Code" />
+            <PropertyRef Name="Product_Code" />
+          </Key>
+          <Property Name="Transaction_Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Product_Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Total" Type="Decimal" Precision="18" Scale="0" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -460,17 +460,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Transaction_Detail">
-            <EntityTypeMapping TypeName="IPOSModel.Transaction_Detail">
-              <MappingFragment StoreEntitySet="Transaction_Detail">
-                <ScalarProperty Name="Transaction_Code" ColumnName="Transaction_Code" />
-                <ScalarProperty Name="Product_Code" ColumnName="Product_Code" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="Total" ColumnName="Total" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Transaction_Payment">
             <EntityTypeMapping TypeName="IPOSModel.Transaction_Payment">
               <MappingFragment StoreEntitySet="Transaction_Payment">
@@ -521,10 +510,21 @@
               <MappingFragment StoreEntitySet="Products">
                 <ScalarProperty Name="Max_Quota" ColumnName="Max_Quota" />
                 <ScalarProperty Name="Min_Quota" ColumnName="Min_Quota" />
-                <ScalarProperty Name="Base_Unit_ID" ColumnName="Base_Unit_ID" />
+                <ScalarProperty Name="Base_Product_Code" ColumnName="Base_Product_Code" />
                 <ScalarProperty Name="Product_Category_ID" ColumnName="Product_Category_ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transaction_Detail">
+            <EntityTypeMapping TypeName="IPOSModel.Transaction_Detail">
+              <MappingFragment StoreEntitySet="Transaction_Detail">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Product_Code" ColumnName="Product_Code" />
+                <ScalarProperty Name="Transaction_Code" ColumnName="Transaction_Code" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

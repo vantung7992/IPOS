@@ -9,14 +9,10 @@ namespace IPos.Controllers
 {
     public class HomeController : Controller
     {
-        public JsonResult CreateNewProduct(string barcode, string name, decimal category_id, decimal original_price, decimal sell price,)
+        // GET: Home
+        public ActionResult Index()
         {
-            using (IPosEntities ctx = new IPosEntities())
-            {
-
-            }
-
-            return Json(null, JsonRequestBehavior.AllowGet);
+            return View();
         }
     }
 }

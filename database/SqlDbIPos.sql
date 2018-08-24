@@ -9,7 +9,7 @@ create table Products(
 	ID bigint,
 	[Name] nvarchar(200),
 	Product_Category_ID int,
-	Base_Unit_ID int,
+	Base_Product_Code varchar(50),
 	Min_Quota int,
 	Max_Quota int,
 	constraint Products_P primary key(ID)
@@ -48,7 +48,7 @@ Create table Product_Unit(
 DROP TABLE IF EXISTS Transaction_Detail;
 create table Transaction_Detail(
 	Transaction_Code varchar(50),
-	Product_Code bigint,
+	Product_Code varchar(50),
 	Quantity int,
 	Price decimal(18,0),
 	Total decimal(18,0),

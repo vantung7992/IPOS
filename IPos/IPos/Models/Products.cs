@@ -17,7 +17,7 @@ namespace IPos.Models
         public long ID { get; set; }
         public string Name { get; set; }
         public Nullable<int> Product_Category_ID { get; set; }
-        public Nullable<int> Base_Unit_ID { get; set; }
+        public string Base_Product_Code { get; set; }
         public Nullable<int> Min_Quota { get; set; }
         public Nullable<int> Max_Quota { get; set; }
     }
