@@ -1,0 +1,215 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<script src="~/Styles/Scripts/jquery-3.1.1.min.js"></script>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>New</title>
+    <link href="~/Styles/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Styles/Content/font-awesome.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    Mã hàng hóa
+                </td>
+                <td>
+                    <input type="text" id="barcode_0" placeholder="Mã hàng tự động" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Tên hàng
+                </td>
+                <td>
+                    <input type="text" id="product_name" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Nhóm hàng
+                </td>
+                <td>
+                    <select id="category_id">
+                        <option value="1">Rượu</option>
+                        <option value="2">Bia</option>
+                        <option value="3">Bánh</option>
+                        <option value="4">Kẹo</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Giá vốn
+                </td>
+                <td>
+                    <input type="text" id="original_price" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Giá bán
+                </td>
+                <td>
+                    <input type="text" id="sell_price_0" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Tồn kho
+                </td>
+                <td>
+                    <input type="text" id="quantity" />
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td>
+                    <table id="unit_table">
+                        <tr>
+                            <td>Đơn vị cơ bản</td>
+                            <td>
+                                <input type="text" id="unit_name_0" />
+                                <input type="text" id="quantitiesPerUnit_0" value="1" hidden />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button onclick="addUnit();">Thêm đơn vị</button>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td>Định mức tồn</td>
+            </tr>
+            <tr>
+                <td>Ít nhất</td>
+                <td>
+                    <input type="text" value="0" id="quota_min" />
+                </td>
+                <td>Nhiều nhất</td>
+                <td>
+                    <input type="text" value="999999999" id="quota_max" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button onclick="createNewProduct();">Lưu</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
+
+<script>
+    function createNewProduct() {
+        var _name = document.getElementById("product_name").value;
+        var _category_id = document.getElementById("category_id").value;
+        var _original_price = document.getElementById("original_price").value;
+        var _quantity = document.getElementById("quantity").value;
+        var _quota_min = document.getElementById("quota_min").value;
+        var _quota_max = document.getElementById("quota_max").value;
+
+        var count = 0;
+        var _barcodes = [], _unit_names = [], _quantitiesPerUnit = [], _sell_price = [];
+        while (document.getElementById("barcode_" + count) != null) {
+            _barcodes[count] = document.getElementById("barcode_" + count).value;
+            _unit_names[count] = document.getElementById("unit_name_" + count).value;
+            _quantitiesPerUnit[count] = document.getElementById("quantitiesPerUnit_" + count).value;
+            _sell_price[count] = document.getElementById("sell_price_" + count).value;
+            count += 1;
+        }
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("CreateNewProduct", "Product")',
+            data: {
+                name: _name,
+                category_id: _category_id,
+                original_price: _original_price,
+                quantity: _quantity,
+                quota_min: _quota_min,
+                quota_max: _quota_max,
+                barcode: _barcodes,
+                unit_name: _unit_names,
+                quantitiesPerUnit: _quantitiesPerUnit,
+                sell_price: _sell_price
+            },
+            cache: false,
+            dataType: 'text',
+            success: function (data) {
+                if (data == null) {
+                    alert("Có lỗi xảy ra, vui lòng thử lại!")
+                }
+                else {
+                    if (data.indexOf("ERR:") == 0)
+                        alert(data.replace("ERR:", ""));
+                    else
+                        alert(data);
+                }
+            },
+            error: function (data) {
+                alert("Có lỗi xảy ra, vui lòng thử lại!")
+            }
+        });
+    }
+
+    function addUnit() {
+        if (document.getElementById("unit_name_0").value.length == 0) {
+            alert("Cần nhập tên đơn vị cơ bản trước");
+            return;
+        }
+
+        var count = 1;
+        while (document.getElementById("unit_" + count) != null) {
+            count += 1;
+        }
+
+        _inner_html = "<td>Tên</td><td><input type='text' id='unit_name_" + count + "' /></td>";
+        _inner_html += "<td>Số lượng quy đổi</td><td><input type='text' id='quantitiesPerUnit_" + count + "' value='1' onchange='changeSellPrice(" + count + ")' /></td>";
+        _inner_html += "<td>Giá bán</td><td><input type='text' id='sell_price_" + count + "' value='" + document.getElementById("sell_price_0").value + "' /></td>";
+        _inner_html += "<td>Mã vạch</td><td><input type='text' placeholder='Mã hàng tự động' id='barcode_" + count + "' /></td>";
+        _inner_html += "<td><button id='btn_remove_" + count + "' class='btn btn-sm' onclick='remove_unit(" + count + ")'><i class='fa fa-close'></i></button></td>";
+        var _tr_node = document.createElement("tr");
+        _tr_node.id = "unit_" + count;
+        _tr_node.innerHTML = _inner_html;
+        document.getElementById("unit_table").appendChild(_tr_node);
+    }
+
+    function remove_unit(unit_id) {
+        var node = document.getElementById("unit_" + unit_id);
+        node.parentNode.removeChild(node);
+
+        var count = unit_id + 1;
+        while (document.getElementById("unit_" + count) != null) {
+            var new_id = count - 1;
+            document.getElementById("unit_" + count).id = "unit_" + (new_id);
+            document.getElementById("unit_name_" + count).id = "unit_name_" + (new_id);
+            document.getElementById("quantitiesPerUnit_" + count).id = "quantitiesPerUnit_" + (new_id);
+            document.getElementById("sell_price_" + count).id = "sell_price_" + (new_id);
+            document.getElementById("barcode_" + count).id = "barcode_" + (new_id);
+            document.getElementById("btn_remove_" + count).setAttribute("onClick", "javascript: remove_unit(" + (new_id) + ");");
+            document.getElementById("btn_remove_" + count).id = "btn_remove_" + (new_id);
+            count += 1;
+        }
+    }
+
+    function changeSellPrice(unit_id) {
+        document.getElementById("sell_price_" + unit_id).value = document.getElementById("quantitiesPerUnit_" + unit_id).value * document.getElementById("sell_price_0").value;
+    }
+</script>

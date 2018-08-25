@@ -1,5 +1,6 @@
 ﻿using IPos.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -7,6 +8,12 @@ namespace IPos.Controllers
 {
     public class ProductController : Controller
     {
+        public ActionResult New()
+        {
+            return View();
+        }
+
+        [HttpPost]
         public JsonResult CreateNewProduct(string name, int category_id, decimal original_price,
                                            int quantity, int quota_min, int quota_max,
                                            string[] barcode, string[] unit_name, int[] quantitiesPerUnit, decimal[] sell_price)
@@ -15,6 +22,8 @@ namespace IPos.Controllers
             {
                 try
                 {
+                    int default_bar_code = Utilities.Utilities.GetMaxProductCodeNumber();
+                    string base_product_code = barcode[0].Length > 0 ? barcode[0] : string.Format("P{0}", (++default_bar_code).ToString("D" + Utilities.Utilities.GetProductCodeNumberLength()));
                     // Khởi tạo sản phẩm
                     Products _new_product = new Products();
                     _new_product.ID = ctx.Products.Any() ? ctx.Products.Max(b => b.ID) + 1 : 1;
@@ -22,16 +31,16 @@ namespace IPos.Controllers
                     _new_product.Product_Category_ID = category_id;
                     _new_product.Min_Quota = quota_min;
                     _new_product.Max_Quota = quota_max;
-                    _new_product.Base_Product_Code = barcode[0];
+                    _new_product.Base_Product_Code = base_product_code;
                     ctx.Products.Add(_new_product);
 
                     // Khởi tạo unit
                     for (int i = 0; i < barcode.Length; i++)
                     {
                         Product_Unit _new_product_unit = new Product_Unit();
-                        _new_product_unit.Product_Code = barcode[i];
+                        _new_product_unit.Product_Code = barcode[i].Length > 0 ? barcode[i] : string.Format("P{0}", (++default_bar_code).ToString("D" + Utilities.Utilities.GetProductCodeNumberLength()));
                         _new_product_unit.Product_ID = _new_product.ID;
-                        _new_product_unit.Base_Product_Code = barcode[0];
+                        _new_product_unit.Base_Product_Code = base_product_code;
                         _new_product_unit.Name = unit_name[i];
                         _new_product_unit.Original_Price = original_price * quantitiesPerUnit[i];
                         _new_product_unit.QuantityPerUnit = quantitiesPerUnit[i];
@@ -59,14 +68,6 @@ namespace IPos.Controllers
                     _new_transaction_detail.Total = quantity * original_price;
                     ctx.Transaction_Detail.Add(_new_transaction_detail);
 
-                    // Khởi tạo thanh toán tiền mặt 0 đồng
-                    Transaction_Payment _new_transaction_payment = new Transaction_Payment();
-                    _new_transaction_payment.ID = ctx.Transaction_Payment.Any() ? ctx.Transaction_Payment.Max(b => b.ID) + 1 : 1;
-                    _new_transaction_payment.Transaction_Code = _new_transaction.code;
-                    _new_transaction_payment.Type = "M";
-                    _new_transaction_payment.Amount = 0;
-                    ctx.Transaction_Payment.Add(_new_transaction_payment);
-
                     ctx.SaveChanges();
                 }
                 catch (Exception ex)
@@ -82,6 +83,35 @@ namespace IPos.Controllers
             }
 
             return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
+        public static int ProductCurrentQuantity(int product_id)
+        {
+            using (IPosEntities ctx = new IPosEntities())
+            {
+                int count = 0;
+                var _all_unit = ctx.Product_Unit.Where(b => b.Product_ID == product_id).Select(b => b.Product_Code);
+                if (_all_unit.Any())
+                {
+                    var _all_unit_code = _all_unit.ToList();
+                    var _find_transaction = from transaction in ctx.Transaction
+                                            from detail in ctx.Transaction_Detail.Where(b => b.Transaction_Code == transaction.code && _all_unit_code.Contains(b.Product_Code))
+                                            from product in ctx.Product_Unit.Where(b => b.Product_Code == detail.Product_Code)
+                                            select new
+                                            {
+                                                Type = transaction.Type,
+                                                Quantity = detail.Quantity * product.QuantityPerUnit
+                                            };
+                    string[] _plus_type = { "I", "M", "BR" };
+                    string[] _minus_type = { "B", "MR", "D" };
+                    var _find_plus_type = _find_transaction.Where(b => _plus_type.Contains(b.Type));
+                    var _find_minus_type = _find_transaction.Where(b => _minus_type.Contains(b.Type));
+                    count += _find_plus_type.Any() ? (int)_find_plus_type.Sum(b => b.Quantity) : 0;
+                    count -= _find_minus_type.Any() ? (int)_find_minus_type.Sum(b => b.Quantity) : 0;
+                }
+
+                return count;
+            }
         }
     }
 }
