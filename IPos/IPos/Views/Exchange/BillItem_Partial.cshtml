@@ -1,0 +1,18 @@
+﻿@model List<IPos.Controllers.BillItem>
+
+<input type="hidden" id="hdBillCurrenr" value="@ViewBag.BillCurrent" />
+<table class="table table-hover">
+    @{ var stt = 1;}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@stt</td>
+            <td>@item.Product_Unit.Product_Code</td>
+            <td>@item.Product.Name</td>
+            <td>@item.Quantity</td>
+            <td>@item.Product_Unit.Sell_Price.GetValueOrDefault(0)</td>
+            <td>@(item.Product_Unit.Sell_Price.GetValueOrDefault(0) * item.Quantity)</td>
+        </tr>
+        stt++;
+    }
+</table>

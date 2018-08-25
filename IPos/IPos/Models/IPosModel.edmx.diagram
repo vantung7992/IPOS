@@ -9,7 +9,6 @@
         <EntityTypeShape EntityType="IPOSModel.Permission" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="IPOSModel.Product_Categories" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="IPOSModel.Product_Image" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="IPOSModel.Product_Unit" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="IPOSModel.Role" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="IPOSModel.Role_Permission" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="IPOSModel.Shop" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
@@ -18,8 +17,9 @@
         <EntityTypeShape EntityType="IPOSModel.Transaction_Type_Group" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="IPOSModel.User_Permission" Width="1.5" PointX="4.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="IPOSModel.Users" Width="1.5" PointX="6.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="IPOSModel.Products" Width="1.5" PointX="9.375" PointY="9.75" />
         <EntityTypeShape EntityType="IPOSModel.Transaction_Detail" Width="1.5" PointX="7.375" PointY="0.75" />
+        <EntityTypeShape EntityType="IPOSModel.Product_Unit" Width="1.5" PointX="9.375" PointY="9.75" />
+        <EntityTypeShape EntityType="IPOSModel.Products" Width="1.5" PointX="9.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

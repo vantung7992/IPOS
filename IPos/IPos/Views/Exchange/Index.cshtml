@@ -1,40 +1,143 @@
-﻿
+﻿@model List<IPos.Controllers.Bill>
 @{
     ViewBag.Title = "Bán hàng";
     Layout = "";
 }
 <!DOCTYPE html>
+@using System.Web.Optimization;
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
-    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    @Styles.Render("~/Content/css")
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <nav class="navbar navbar-static-top">
+<body class="skin-blue-light layout-top-nav" style="padding-top: inherit">
+    <div class="wrapper" style="height: auto; min-height: 100%;">
+        <header class="main-header" id="main_header">
+            <nav class="navbar navbar-static-top">
+                <div class="navbar-header">
 
-                </nav>
+                </div>
+                <div class="navbar-form navbar-left">
+                    <div class="form-group">
+                        <input id="txtSearch" type="text" placeholder="Tìm mặt hàng" />
+                    </div>
+                    <button class="btn btn-primary btn-flat no-border"><i class="fa fa-barcode"></i></button>
+                </div>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown messages-menu" title="Phím tắt chức năng">
+                            <a href="#" class="dropdown-toggle " data-toggle="dropdown">
+                                <i class="glyphicon glyphicon-exclamation-sign"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <section class="content">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="nav-tabs-custom">
+                        <ul id="ulBill" class="nav nav-tabs">
+                            @foreach (var item in Model)
+                            {
+                                <li billNumber="@item.BillNumber">
+                                    <a href="javascript:void(0)" onclick="GetBillDetail(@item.BillNumber)">Hóa đơn @item.BillNumber</a>
+                                    <a href='@Url.Action("DeleteBill","Exchange",new {billNumber = item.BillNumber })' class="btn btn-xs btn-default">
+                                        <i class="fa fa-close"></i>
+                                    </a>
+                                </li>
+                            }
+                            <li class=""><a href='@Url.Action("AddBill","Exchange")'><i class="fa fa-plus"></i></a></li>
+                        </ul>
+                    </div>
+                    <hr />
+                    <div id="idBillDetail"></div>
+                </div>
+                <div class="col-md-3">
+                    <div class="box box-default">
+                        <div class="box-body">
+
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav"></ul>
-            </div>
-        </div>
+            <footer>
+                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            </footer>
+        </section>
     </div>
+    @Scripts.Render("~/Content/js")
+    <script type="text/javascript">
+        $('#txtSearch').keyup(function (e) {
+            var productCode = $('#txtSearch').val();
 
-    <div class="container body-content">
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+            if (e.keyCode == 13) {
+                AddBillItem(productCode);
+                $('#txtSearch').focus();
+            }
+        });
+        $("#ulBill li").click(function () {
+            $("#ulBill li").each(function () {
+                $(this).removeClass("active");
+            });
+            $(this).addClass('active');
+        });
 
-    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
+
+        /*Function*/
+        function AddBill() {
+            $.ajax({
+                url: '@Url.Action("AddBill","Exchange")',
+                type:'GET',
+                cache: false,
+                success: function () {
+                }
+            });
+        }
+
+        function AddBillItem(productCode) {
+            var billCurrent = $('#hdBillCurrenr').val();
+            $.ajax({
+                url: '@Url.Action("AddBillItem","Exchange")',
+                data: { productCode: productCode, quantity: 1, billNumber: billCurrent },
+                type:'GET',
+                dataType: 'JSON',
+                cache: false,
+                success: function (rerult) {
+                    GetBillDetail(billCurrent);
+                }
+            });
+        }
+
+        function GetBillDetail(billNumber) {
+            $.ajax({
+                url: '@Url.Action("BillItem_Partial", "Exchange")',
+                data: { billNumber: billNumber},
+                type: 'GET',
+                contentType: 'application/json;charset=utf-8',
+                cache: false,
+                success: function (result) {
+                    if (result.success) {
+                        debugger;
+                        $('#idBillDetail').html(result.html);
+                    } else {
+                        alert(result.msg);
+                    }
+                },
+                error: function (qXhr, exception) {
+                    alert("Lỗi: " + qXhr);
+                }
+            });
+        }
+
+        /*Intinial*/
+        jQuery(function ($) {
+            $("#txtSearch").focus(function () { $(this).select(); });
+            GetBillDetail(@ViewBag.BillCurrent);
+        });
+    </script>
 </body>
 </html>

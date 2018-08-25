@@ -1,4 +1,6 @@
-﻿--Drop database [IPOS];
+﻿--USE master;
+--ALTER DATABASE [IPOS] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+--DROP DATABASE [IPOS] ;
 --Create  database [IPOS];
 Use IPOS;
 
