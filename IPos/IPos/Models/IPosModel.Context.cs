@@ -28,7 +28,6 @@ namespace IPos.Models
         public virtual DbSet<Partner> Partner { get; set; }
         public virtual DbSet<Permission> Permission { get; set; }
         public virtual DbSet<Product_Categories> Product_Categories { get; set; }
-        public virtual DbSet<Product_Image> Product_Image { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Role_Permission> Role_Permission { get; set; }
         public virtual DbSet<Shop> Shop { get; set; }
@@ -40,5 +39,6 @@ namespace IPos.Models
         public virtual DbSet<Transaction_Detail> Transaction_Detail { get; set; }
         public virtual DbSet<Product_Unit> Product_Unit { get; set; }
         public virtual DbSet<Products> Products { get; set; }
+        public virtual DbSet<Product_Image> Product_Image { get; set; }
     }
 }

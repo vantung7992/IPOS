@@ -1,23 +1,309 @@
 ﻿@model IPos.Controllers.ProductController.ListModel
 
-<table>
-    <thead>
-        <tr>
-            <th>Mã hàng hóa</th>
-            <th>Tên hàng</th>
-            <th>Giá bán</th>
-            <th>Giá vốn</th>
-            <th>Tồn kho</th>
-        </tr>
-    </thead>
-    @foreach (var product in Model.listItem)
-    {
-        <tr>
-            <td>@product["CODE"]</td>
-            <td>@product["NAME"]</td>
-            <td>@product["SELL_PRICE"]</td>
-            <td>@product["ORIGINAL_PRICE"]</td>
-            <td>@product["QUANTITY"]</td>
-        </tr>
+@{ 
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .form-control {
+        height:30px;
+        padding:0px 10px;
+        border-radius:3px;
     }
-</table>
+
+    td {
+        padding:0px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-2">
+        <input class="form-control" placeholder="Theo mã, tên hàng" />
+    </div>
+    <div class="col-lg-10">
+        <h4>
+            Hàng hóa
+            <button class="btn btn-success pull-right" style="margin-left:10px;" onclick="export_product();"><i class="fa fa-sign-out"></i> Xuất file</button>
+            <button class="btn btn-success pull-right" style="margin-left:10px;" onclick="new_product();"><i class="fa fa-plus"></i> Thêm mới</button>
+        </h4>
+        <table class="table table-responsive table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>Mã hàng hóa</th>
+                    <th>Tên hàng</th>
+                    <th>Giá bán</th>
+                    <th>Giá vốn</th>
+                    <th>Tồn kho</th>
+                </tr>
+            </thead>
+            @foreach (var product in Model.listItem)
+            {
+                <tr>
+                    <td>@product["CODE"]</td>
+                    <td>@product["NAME"]</td>
+                    <td>@product["SELL_PRICE"]</td>
+                    <td>@product["ORIGINAL_PRICE"]</td>
+                    <td>@product["QUANTITY"]</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="createNewProduct" tabindex="-1" role="dialog" aria-labelledby="newModalLabel" aria-hidden="true" style="font-family:Arial">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Thêm hàng hóa</h4>
+            </div>
+            <div class="modal-body">
+                <table style="width:100%">
+                    <tr>
+                        <td style="width:60%">
+                            <table class="table no-border no-padding no-margin" style="width:100%">
+                                <tr>
+                                    <td class="col-lg-3" style="vertical-align:middle"><b>Mã hàng hóa</b></td>
+                                    <td colspan="2"><input class="form-control" type="text" id="barcode_0" placeholder="Mã hàng tự động" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align:middle"><b>Tên hàng</b></td>
+                                    <td colspan="2"><input class="form-control" type="text" id="product_name" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align:middle"><b>Nhóm hàng</b></td>
+                                    <td>
+                                        <select id="category_id" class="form-control">
+                                            @{
+                                                var _tree = IPos.Controllers.ProductController.GetCategoryTree();
+                                                if (_tree.Count > 0)
+                                                {
+                                                    foreach (var item in _tree)
+                                                    {
+                                                        string spaces = "";
+                                                        for (int i = 0; i < int.Parse(item["LEVEL"]); i++)
+                                                        {
+                                                            spaces += "&nbsp;&nbsp;&nbsp;&nbsp;";
+                                                        }
+                                                        <option value="@item["ID"]">
+                                                            @Html.Raw(spaces) @item["NAME"]
+                                                        </option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </td>
+                                    <td class="col-lg-1">
+                                        <button class="btn btn-sm"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align:middle"><b>Giá vốn</b></td>
+                                    <td colspan="2"><input class="form-control" type="text" id="original_price" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align:middle"><b>Giá bán</b></td>
+                                    <td colspan="2">
+                                        <input class="form-control" type="text" id="sell_price_0" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align:middle"><b>Tồn kho</b></td>
+                                    <td colspan="2">
+                                        <input class="form-control" type="text" id="quantity" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="vertical-align:top">
+                            <table class="table no-border no-padding no-margin" style="width:100%">
+                                <tr>
+                                    <td rowspan="2" style="width:50%">
+                                        <img src="" id="image_1" style="width:100%">
+                                    </td>
+                                    <td style="width:25%">
+                                        <img src="" id="image_2" style="width:100%">
+                                    </td>
+                                    <td style="width:25%">
+                                        <img src="" id="image_3" style="width:100%">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%">
+                                        <img src="" id="image_4" style="width:100%">
+                                    </td>
+                                    <td style="width:25%">
+                                        <img src="" id="image_5" style="width:100%">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-success" onclick="uploadImage();">Chọn ảnh</button>
+                                        <input type="file" id="imageUploader" style="display:none" onchange="previewFile()" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Đơn vị tính</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table>
+                            <tr>
+                                <td class="col-lg-2"><b>Đơn vị cơ bản</b></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:0px 10px;">
+                                    <input class="form-control" type="text" id="unit_name_0" />
+                                    <input type="text" id="quantitiesPerUnit_0" value="1" hidden />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-lg-3"><b>Tên đơn vị</b></td>
+                                <td class="col-lg-2"><b>Giá trị quy đổi</b></td>
+                                <td class="col-lg-2"><b>Giá bán</b></td>
+                                <td class="col-lg-3"><b>Mã hàng hóa</b></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td  style="padding:0px 10px;">
+                                    <input class="form-control" />
+                                </td>
+                                <td style="padding:0px 10px;">
+                                    <input class="form-control" />
+                                </td>
+                                <td style="padding:0px 10px;">
+                                    <input class="form-control" />
+                                </td>
+                                <td style="padding:0px 10px;">
+                                    <input class="form-control" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Định mức tồn</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table>
+                            <tr>
+                                <td class="col-lg-2"><b>Ít nhất</b></td>
+                                <td class="col-lg-4">
+                                    <input id="quota_min" class="form-control" />
+                                </td>
+                                <td class="col-lg-2"><b>Nhiều nhất</b></td>
+                                <td class="col-lg-4">
+                                    <input id="quota_max" class="form-control" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success pull-right" onclick="saveNew();"><i class="fa fa-floppy-o"></i> Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function new_product() {
+        $("#createNewProduct").modal('show');
+    }
+
+    function uploadImage() {
+        document.getElementById("imageUploader").click();
+    }
+
+    function previewFile() {
+        var count = 1;
+        while (document.getElementById('image_' + count) != null && document.getElementById('image_' + count).src.length > 1000) {
+            count++;
+        }
+        if (count > 5)
+            return;
+
+        var files = document.getElementById('imageUploader').files;
+        if (files.length > 0) {
+            var preview = document.getElementById('image_' + count);
+            var reader = new FileReader();
+
+            reader.addEventListener("load", function () {
+                preview.src = reader.result;
+            }, false);
+
+            if (files[0]) {
+                reader.readAsDataURL(files[0]);
+            }
+        }
+    }
+
+    function export_product() {
+        window.location = '@Url.Action("ExportProducts", "Product")';
+    }
+
+    function saveNew() {
+        var _name = document.getElementById("product_name").value;
+        var _category_id = document.getElementById("category_id").value;
+        var _original_price = document.getElementById("original_price").value;
+        var _quantity = document.getElementById("quantity").value;
+        var _quota_min = document.getElementById("quota_min").value;
+        var _quota_max = document.getElementById("quota_max").value;
+
+        var count = 0;
+        var _barcodes = [], _unit_names = [], _quantitiesPerUnit = [], _sell_price = [];
+        while (document.getElementById("barcode_" + count) != null) {
+            _barcodes[count] = document.getElementById("barcode_" + count).value;
+            _unit_names[count] = document.getElementById("unit_name_" + count).value;
+            _quantitiesPerUnit[count] = document.getElementById("quantitiesPerUnit_" + count).value;
+            _sell_price[count] = document.getElementById("sell_price_" + count).value;
+            count += 1;
+        }
+
+        count = 1;
+        var _img = [];
+        while (document.getElementById("image_" + count) != null && document.getElementById("image_" + count).src.length > 1000) {
+            _img[count - 1] = document.getElementById("image_" + count).src;
+            count += 1;
+        }
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("CreateNewProduct", "Product")',
+            data: {
+                name: _name,
+                category_id: _category_id,
+                original_price: _original_price,
+                quantity: _quantity,
+                quota_min: _quota_min,
+                quota_max: _quota_max,
+                barcode: _barcodes,
+                unit_name: _unit_names,
+                quantitiesPerUnit: _quantitiesPerUnit,
+                sell_price: _sell_price,
+                img: _img
+            },
+            cache: false,
+            dataType: 'text',
+            success: function (data) {
+                if (data == null) {
+                    alert("Có lỗi xảy ra, vui lòng thử lại!")
+                }
+                else {
+                    if (data.indexOf("ERR:") == 0)
+                        alert(data.replace("ERR:", ""));
+                    else
+                        alert(data);
+                }
+            },
+            error: function (data) {
+                alert("Có lỗi xảy ra, vui lòng thử lại!")
+            }
+        });
+    }
+</script>

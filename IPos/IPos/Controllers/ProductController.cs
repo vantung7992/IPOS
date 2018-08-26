@@ -16,7 +16,7 @@ namespace IPos.Controllers
         [HttpPost]
         public JsonResult CreateNewProduct(string name, int category_id, decimal original_price,
                                            int quantity, int quota_min, int quota_max,
-                                           string[] barcode, string[] unit_name, int[] quantitiesPerUnit, decimal[] sell_price)
+                                           string[] barcode, string[] unit_name, int[] quantitiesPerUnit, decimal[] sell_price, string[] img)
         {
             using (IPosEntities ctx = new IPosEntities())
             {
@@ -46,6 +46,18 @@ namespace IPos.Controllers
                         _new_product_unit.QuantityPerUnit = quantitiesPerUnit[i];
                         _new_product_unit.Sell_Price = sell_price[i];
                         ctx.Product_Unit.Add(_new_product_unit);
+                    }
+
+                    // Khởi tạo image
+                    long _last_image_id = ctx.Product_Image.Any() ? ctx.Product_Image.Max(b => b.ID) + 1 : 1;
+                    for (int i = 0; i < img.Length; i++)
+                    {
+                        Product_Image _new_image = new Product_Image();
+                        _new_image.ID = _last_image_id++;
+                        _new_image.Number = i + 1;
+                        _new_image.Product_ID = _new_product.ID;
+                        _new_image.Contents = img[i];
+                        ctx.Product_Image.Add(_new_image);
                     }
 
                     // Khởi tạo giao dịch "Initiation"
@@ -114,6 +126,39 @@ namespace IPos.Controllers
             }
         }
 
+        public static List<Dictionary<string, string>> GetCategoryTree()
+        {
+            List<Dictionary<string, string>> _category_tree = new List<Dictionary<string, string>>();
+            using (IPosEntities ctx = new IPosEntities())
+            {
+                getRescursiveCategories(ctx, _category_tree, 0, 0);
+                return _category_tree;
+            }
+        }
+
+        private static void getRescursiveCategories(IPosEntities ctx, List<Dictionary<string, string>> _tree, long parentId, int level)
+        {
+            var _find_category = ctx.Product_Categories.Where(b => b.Parent_ID == parentId).OrderBy(b => b.ID);
+            if (_find_category.Any())
+            {
+                foreach (var category in _find_category)
+                {
+                    Dictionary<string, string> _info = new Dictionary<string, string>();
+                    _info.Add("ID", category.ID.ToString());
+                    _info.Add("NAME", category.Name);
+                    _info.Add("LEVEL", level.ToString());
+                    _tree.Add(_info);
+
+                    var _find_childern = ctx.Product_Categories.Where(b => b.Parent_ID == category.ID);
+                    if (_find_childern.Any())
+                    {
+                        getRescursiveCategories(ctx, _tree, category.ID, level + 1);
+                    }
+                }
+            }
+
+        }
+
         private static int _product_code_number_length = 6; // P123456
         public int GetMaxProductCodeNumber()
         {
@@ -127,7 +172,7 @@ namespace IPos.Controllers
             }
         }
 
-        public PartialViewResult ListProduct(/*string searchStr, int categoryId, int page, int pageSize*/)
+        public ActionResult ListProduct(/*string searchStr, int categoryId, int page, int pageSize*/)
         {
             string searchStr = "";
             int categoryId = -1;
@@ -168,7 +213,38 @@ namespace IPos.Controllers
                 _listModel.currentPage = page;
                 _listModel.listItem = _list_product;
 
-                return PartialView(_listModel);
+                return View(_listModel);
+            }
+        }
+
+        public FileResult ExportProducts()
+        {
+            using (IPosEntities ctx = new IPosEntities())
+            {
+                var _all_product = from product in ctx.Products
+                                   from unit in ctx.Product_Unit.Where(b => b.Product_ID == product.ID)
+                                   from category in ctx.Product_Categories.Where(b => b.ID == product.Product_Category_ID)
+                                   select new { product, unit, category };
+
+                List<Dictionary<string, string>> _list_product = new List<Dictionary<string, string>>();
+                foreach (var item in _all_product)
+                {
+                    Dictionary<string, string> _info = new Dictionary<string, string>();
+                    _info.Add("Nhóm hàng", item.category.Name);
+                    _info.Add("Mã hàng", item.unit.Product_Code);
+                    _info.Add("Tên hàng hóa", item.product.Name);
+                    _info.Add("Giá bán", item.unit.Sell_Price.GetValueOrDefault(0).ToString("N0"));
+                    _info.Add("Giá vốn", item.unit.Original_Price.GetValueOrDefault(0).ToString("N0"));
+                    _info.Add("Tồn kho", ProductCurrentQuantity((long)item.product.ID).ToString("N0"));
+                    _info.Add("Tồn nhỏ nhất", item.product.Min_Quota.GetValueOrDefault(0).ToString("N0"));
+                    _info.Add("Tồn lớn nhất", item.product.Max_Quota.GetValueOrDefault(0).ToString("N0"));
+                    _info.Add("Đơn vị tính", item.unit.Name);
+                    _info.Add("Quy đổi", item.unit.QuantityPerUnit.GetValueOrDefault(0).ToString("N0"));
+                    _info.Add("Mã hàng đơn vị cơ bản", item.unit.Base_Product_Code);
+                    _list_product.Add(_info);
+                }
+                string file_name = string.Format("DanhSachSanPham_{0}.xlsx", DateTime.Now.ToString("yyyyMMdd"));
+                return File(Utilities.Utilities.ExportFile(file_name, _list_product), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", file_name);
             }
         }
 

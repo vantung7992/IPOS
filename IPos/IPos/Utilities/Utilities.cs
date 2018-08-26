@@ -1,4 +1,5 @@
-﻿using IPos.Models;
+﻿using ClosedXML.Excel;
+using IPos.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,36 @@ namespace IPos.Utilities
                     _max_value = int.Parse(_find_max_code.First().Replace(code, "")) + 1;
                 return string.Format("{0}{1}", code, _max_value.ToString("D" + _transaction_code_number_length));
             }
+        }
+
+        public static string ExportFile(string fileName, List<Dictionary<string, string>> listItem)
+        {
+            var workbook = new XLWorkbook();
+            workbook.AddWorksheet("DanhSach");
+            var ws = workbook.Worksheet("DanhSach");
+
+            string file_path = HttpContext.Current.Server.MapPath("~/Export/" + fileName);
+
+            int row = 1, column = 1;
+            foreach (string key in listItem[0].Keys)
+            {
+                ws.Cell(row, column).Value = key;
+                column++;
+            }
+            row++;
+            foreach (var item in listItem)
+            {
+                column = 1;
+                foreach (string key in listItem[0].Keys)
+                {
+                    ws.Cell(row, column).Value = item[key];
+                    column++;
+                }
+                row++;
+            }
+
+            workbook.SaveAs(file_path);
+            return file_path;
         }
     }
 }

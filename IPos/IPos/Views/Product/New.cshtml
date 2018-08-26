@@ -118,56 +118,6 @@
 </html>
 
 <script>
-    function createNewProduct() {
-        var _name = document.getElementById("product_name").value;
-        var _category_id = document.getElementById("category_id").value;
-        var _original_price = document.getElementById("original_price").value;
-        var _quantity = document.getElementById("quantity").value;
-        var _quota_min = document.getElementById("quota_min").value;
-        var _quota_max = document.getElementById("quota_max").value;
-
-        var count = 0;
-        var _barcodes = [], _unit_names = [], _quantitiesPerUnit = [], _sell_price = [];
-        while (document.getElementById("barcode_" + count) != null) {
-            _barcodes[count] = document.getElementById("barcode_" + count).value;
-            _unit_names[count] = document.getElementById("unit_name_" + count).value;
-            _quantitiesPerUnit[count] = document.getElementById("quantitiesPerUnit_" + count).value;
-            _sell_price[count] = document.getElementById("sell_price_" + count).value;
-            count += 1;
-        }
-        $.ajax({
-            type: "post",
-            url: '@Url.Action("CreateNewProduct", "Product")',
-            data: {
-                name: _name,
-                category_id: _category_id,
-                original_price: _original_price,
-                quantity: _quantity,
-                quota_min: _quota_min,
-                quota_max: _quota_max,
-                barcode: _barcodes,
-                unit_name: _unit_names,
-                quantitiesPerUnit: _quantitiesPerUnit,
-                sell_price: _sell_price
-            },
-            cache: false,
-            dataType: 'text',
-            success: function (data) {
-                if (data == null) {
-                    alert("Có lỗi xảy ra, vui lòng thử lại!")
-                }
-                else {
-                    if (data.indexOf("ERR:") == 0)
-                        alert(data.replace("ERR:", ""));
-                    else
-                        alert(data);
-                }
-            },
-            error: function (data) {
-                alert("Có lỗi xảy ra, vui lòng thử lại!")
-            }
-        });
-    }
 
     function addUnit() {
         if (document.getElementById("unit_name_0").value.length == 0) {

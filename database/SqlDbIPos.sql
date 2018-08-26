@@ -29,7 +29,7 @@ create table Product_Categories(
 DROP TABLE IF EXISTS Product_Image;
 create table Product_Image(
 	 ID bigint,
-	 Product_ID varchar(50),
+	 Product_ID bigint,
 	 Contents text,
 	 Number int,
 	 constraint Product_Image_P primary key(ID)

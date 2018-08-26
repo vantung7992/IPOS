@@ -39,7 +39,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="bigint" Nullable="false" />
-          <Property Name="Product_ID" Type="varchar" MaxLength="50" />
+          <Property Name="Product_ID" Type="bigint" />
           <Property Name="Contents" Type="text" />
           <Property Name="Number" Type="int" />
         </EntityType>
@@ -211,15 +211,6 @@
           <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Parent_ID" Type="Int32" />
         </EntityType>
-        <EntityType Name="Product_Image">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int64" Nullable="false" />
-          <Property Name="Product_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Contents" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Number" Type="Int32" />
-        </EntityType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="ID" />
@@ -308,7 +299,6 @@
           <EntitySet Name="Partner" EntityType="Self.Partner" />
           <EntitySet Name="Permission" EntityType="Self.Permission" />
           <EntitySet Name="Product_Categories" EntityType="Self.Product_Categories" />
-          <EntitySet Name="Product_Image" EntityType="Self.Product_Image" />
           <EntitySet Name="Role" EntityType="Self.Role" />
           <EntitySet Name="Role_Permission" EntityType="Self.Role_Permission" />
           <EntitySet Name="Shop" EntityType="Self.Shop" />
@@ -320,6 +310,7 @@
           <EntitySet Name="Transaction_Detail" EntityType="IPOSModel.Transaction_Detail" />
           <EntitySet Name="Product_Unit" EntityType="IPOSModel.Product_Unit" />
           <EntitySet Name="Products" EntityType="IPOSModel.Products" />
+          <EntitySet Name="Product_Image" EntityType="IPOSModel.Product_Image" />
         </EntityContainer>
         <EntityType Name="Transaction_Detail">
           <Key>
@@ -354,6 +345,15 @@
           <Property Name="Base_Product_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Min_Quota" Type="Int32" />
           <Property Name="Max_Quota" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Product_Image">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" />
+          <Property Name="Product_ID" Type="Int64" />
+          <Property Name="Contents" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Number" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -390,16 +390,6 @@
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Parent_ID" ColumnName="Parent_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Product_Image">
-            <EntityTypeMapping TypeName="IPOSModel.Product_Image">
-              <MappingFragment StoreEntitySet="Product_Image">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
-                <ScalarProperty Name="Contents" ColumnName="Contents" />
-                <ScalarProperty Name="Number" ColumnName="Number" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -524,6 +514,16 @@
                 <ScalarProperty Name="Base_Product_Code" ColumnName="Base_Product_Code" />
                 <ScalarProperty Name="Product_Category_ID" ColumnName="Product_Category_ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Product_Image">
+            <EntityTypeMapping TypeName="IPOSModel.Product_Image">
+              <MappingFragment StoreEntitySet="Product_Image">
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Contents" ColumnName="Contents" />
+                <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
