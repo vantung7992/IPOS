@@ -29,7 +29,7 @@ namespace IPos.Utilities
             public static string Receipt() { return receipt; }
         }
 
-        private static int _transaction_code_number_length = 6; // B000001
+        private static int _transaction_code_number_length = 6; // B123456
         public static string CreateNewTransactionCode(string code)
         {
             using (IPosEntities ctx = new IPosEntities())
@@ -37,13 +37,9 @@ namespace IPos.Utilities
                 var _find_max_code = ctx.Transaction.Where(b => b.code.StartsWith(code)).OrderByDescending(b => b.code).Select(b => b.code);
                 int _max_value = 1;
                 if (_find_max_code.Any())
-                {
-                    string _max_code = _find_max_code.First();
-                    _max_value = int.Parse(_max_code.Replace(code, ""));
-                }
+                    _max_value = int.Parse(_find_max_code.First().Replace(code, "")) + 1;
                 return string.Format("{0}{1}", code, _max_value.ToString("D" + _transaction_code_number_length));
             }
         }
-
     }
 }
