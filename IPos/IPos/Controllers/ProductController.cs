@@ -85,7 +85,7 @@ namespace IPos.Controllers
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
 
-        public static int ProductCurrentQuantity(int product_id)
+        public static int ProductCurrentQuantity(long product_id)
         {
             using (IPosEntities ctx = new IPosEntities())
             {
@@ -125,6 +125,59 @@ namespace IPos.Controllers
                     _max_value = int.Parse(_find_max_code.First().Replace("P", ""));
                 return _max_value;
             }
+        }
+
+        public PartialViewResult ListProduct(/*string searchStr, int categoryId, int page, int pageSize*/)
+        {
+            string searchStr = "";
+            int categoryId = -1;
+            int page = 0;
+            int pageSize = 10;
+            using (IPosEntities ctx = new IPosEntities())
+            {
+                var _find_product = from product in ctx.Products.Where(b => (searchStr == "" || b.Name.ToLower().Contains(searchStr.ToLower())) && (categoryId == -1 || b.Product_Category_ID == categoryId))
+                                    from unit in ctx.Product_Unit.Where(b => b.Product_ID == product.ID && b.Product_Code == b.Base_Product_Code)
+                                    select new
+                                    {
+                                        ID = unit.Product_ID,
+                                        CODE = unit.Product_Code,
+                                        NAME = product.Name,
+                                        SELL_PRICE = unit.Sell_Price,
+                                        ORIGINAL_PRICE = unit.Original_Price
+                                    };
+
+                int totalItem = _find_product.Count();
+                int totalPage = (int)Math.Ceiling((decimal)(totalItem / pageSize));
+
+                _find_product = _find_product.OrderByDescending(b => b.CODE).Skip(page * pageSize).Take(pageSize);
+                List<Dictionary<string, string>> _list_product = new List<Dictionary<string, string>>();
+                foreach (var product in _find_product)
+                {
+                    Dictionary<string, string> _info = new Dictionary<string, string>();
+                    _info.Add("CODE", product.CODE);
+                    _info.Add("NAME", product.NAME);
+                    _info.Add("SELL_PRICE", product.SELL_PRICE.GetValueOrDefault(0).ToString("N0"));
+                    _info.Add("ORIGINAL_PRICE", product.ORIGINAL_PRICE.GetValueOrDefault(0).ToString("N0"));
+                    _info.Add("QUANTITY", ProductCurrentQuantity(product.ID.GetValueOrDefault(0)).ToString("N0"));
+                    _list_product.Add(_info);
+                }
+
+                var _listModel = new ListModel();
+                _listModel.totalItem = totalItem;
+                _listModel.totalPage = totalPage;
+                _listModel.currentPage = page;
+                _listModel.listItem = _list_product;
+
+                return PartialView(_listModel);
+            }
+        }
+
+        public class ListModel
+        {
+            public int totalItem { get; set; }
+            public int totalPage { get; set; }
+            public int currentPage { get; set; }
+            public List<Dictionary<string, string>> listItem { get; set; }
         }
     }
 }

@@ -1,0 +1,23 @@
+﻿@model IPos.Controllers.ProductController.ListModel
+
+<table>
+    <thead>
+        <tr>
+            <th>Mã hàng hóa</th>
+            <th>Tên hàng</th>
+            <th>Giá bán</th>
+            <th>Giá vốn</th>
+            <th>Tồn kho</th>
+        </tr>
+    </thead>
+    @foreach (var product in Model.listItem)
+    {
+        <tr>
+            <td>@product["CODE"]</td>
+            <td>@product["NAME"]</td>
+            <td>@product["SELL_PRICE"]</td>
+            <td>@product["ORIGINAL_PRICE"]</td>
+            <td>@product["QUANTITY"]</td>
+        </tr>
+    }
+</table>
