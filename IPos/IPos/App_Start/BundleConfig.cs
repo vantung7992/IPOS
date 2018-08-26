@@ -11,17 +11,19 @@ namespace IPos.App_Start
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Styles/Content/bootstrap.min.css",
-                "~/Styles/Content/font-awesome.min.css",
-                "~/Styles/admin-lte/css/skins/_all-skins.css",
-                "~/Styles/admin-lte/css/AdminLTE.min.css",
-                "~/Styles/Content/Site.css"
+                "~/Styles/AdminLTE/bower_components/bootstrap/dist/css/bootstrap.min.css",
+                "~/Styles/AdminLTE/bower_components/font-awesome/css/font-awesome.min.css",
+                "~/Styles/AdminLTE/bower_components/Ionicons/css/ionicons.min.css",
+                "~/Styles/AdminLTE/dist/css/AdminLTE.min.css",
+                "~/Styles/AdminLTE/dist/css/skins/_all-skins.min.css"
             ));
 
             bundles.Add(new ScriptBundle("~/Content/js").Include(
-                "~/Scripts/modernizr-2.6.2.js",
-                "~/Styles/Scripts/jquery-3.1.1.min.js",
-                "~/Scripts/bootstrap.min.js"
+                "~/Styles/AdminLTE/bower_components/jquery/dist/jquery.min.js",
+                "~/Styles/AdminLTE/bower_components/bootstrap/dist/js/bootstrap.min.js",
+                "~/Styles/AdminLTE/bower_components/jquery-slimscroll/jquery.slimscroll.min.js",
+                "~/Styles/AdminLTE/bower_components/fastclick/lib/fastclick.js",
+                "~/Styles/AdminLTE/dist/js/adminlte.min.js"
             ));
         }
     }

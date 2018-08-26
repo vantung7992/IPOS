@@ -80,12 +80,8 @@
             }
         });
         $("#ulBill li").click(function () {
-            $("#ulBill li").each(function () {
-                $(this).removeClass("active");
-            });
-            $(this).addClass('active');
+            CssActiveBillMenu($(this).attr("billNumber"));
         });
-
 
         /*Function*/
         function AddBill() {
@@ -121,7 +117,6 @@
                 cache: false,
                 success: function (result) {
                     if (result.success) {
-                        debugger;
                         $('#idBillDetail').html(result.html);
                     } else {
                         alert(result.msg);
@@ -133,9 +128,20 @@
             });
         }
 
+        function CssActiveBillMenu(billNumber) {
+            $("#ulBill li").each(function () {
+                if ($(this).attr("billNumber") == billNumber) {
+                    $(this).addClass("active");
+                } else {
+                    $(this).removeClass("active");
+                }
+            });
+        }
+
         /*Intinial*/
         jQuery(function ($) {
             $("#txtSearch").focus(function () { $(this).select(); });
+            CssActiveBillMenu(@ViewBag.BillCurrent);
             GetBillDetail(@ViewBag.BillCurrent);
         });
     </script>
