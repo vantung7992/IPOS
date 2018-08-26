@@ -6,6 +6,7 @@
     @foreach (var item in Model)
     {
         <tr>
+            <td><a href="javascript:void(0)" onclick="DelBillItem(@ViewBag.BillCurrent,@item.Product_Unit.Product_Code);"> <i class="fa fa-remove"></i> </a></td>
             <td>@stt</td>
             <td>@item.Product_Unit.Product_Code</td>
             <td>@item.Product.Name</td>
@@ -16,3 +17,19 @@
         stt++;
     }
 </table>
+<script type="text/javascript">
+    function DelBillItem(billNumber, productCode) {
+        debugger;
+        $.ajax({
+            url: '@Url.Action("DeleteBillItem","Exchange")',
+            data: { billNumber: billNumber, productCode: productCode },
+            type: 'GET',
+            dataType: 'JSON',
+            success: function (result) {
+                GetBillDetail(billNumber);
+            },
+            error: function () {}
+        });
+    }
+
+</script>

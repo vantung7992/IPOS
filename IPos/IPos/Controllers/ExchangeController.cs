@@ -148,7 +148,7 @@ namespace IPos.Controllers
         }
 
         //delete Bill item
-        public JsonResult DeleteBillItem(string productCode)
+        public JsonResult DeleteBillItem(int billNumber,string productCode)
         {
             var sessionBill = (List<BillItem>)Session[BillSession];
             sessionBill.RemoveAll(x => x.Product_Unit.Product_Code == productCode);
@@ -189,8 +189,8 @@ namespace IPos.Controllers
                 listBill = (List<Bill>)billSession;
                 listBillItem = listBill.SingleOrDefault(x => x.BillNumber == billNumber).BillItems;
             }
+            Session[BillCurrent] = billNumber;
             ViewBag.BillCurrent = Session[BillCurrent];
-            // return PartialView(listBillItem);
             return Json(new { success = true, html = RenderRazorViewToString("~/Views/Exchange/BillItem_Partial.cshtml", listBillItem) }, JsonRequestBehavior.AllowGet);
         }
         #endregion
@@ -226,5 +226,4 @@ namespace IPos.Controllers
         public Product_Unit Product_Unit { get; set; }
         public int Quantity { get; set; }
     }
-
 }
