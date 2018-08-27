@@ -148,11 +148,20 @@ namespace IPos.Controllers
         }
 
         //delete Bill item
-        public JsonResult DeleteBillItem(int billNumber,string productCode)
+        public JsonResult DeleteBillItem(int billNumber, string productCode)
         {
-            var sessionBill = (List<BillItem>)Session[BillSession];
-            sessionBill.RemoveAll(x => x.Product_Unit.Product_Code == productCode);
-            return Json(new { success = true });
+            try
+            {
+                var sessionBill = (List<Bill>)Session[BillSession];
+                if (sessionBill == null)
+                    return Json(new { success = false,msg= "Session null" }, JsonRequestBehavior.AllowGet);
+                sessionBill.Single(x => x.BillNumber == billNumber).BillItems.RemoveAll(x => x.Product_Unit.Product_Code == productCode);
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return Json(new { success = false, msg = "Lỗi: " + e.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         //delete All item

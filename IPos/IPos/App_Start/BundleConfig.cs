@@ -23,7 +23,8 @@ namespace IPos.App_Start
                 "~/Styles/AdminLTE/bower_components/bootstrap/dist/js/bootstrap.min.js",
                 "~/Styles/AdminLTE/bower_components/jquery-slimscroll/jquery.slimscroll.min.js",
                 "~/Styles/AdminLTE/bower_components/fastclick/lib/fastclick.js",
-                "~/Styles/AdminLTE/dist/js/adminlte.min.js"
+                "~/Styles/AdminLTE/dist/js/adminlte.min.js",
+                "~/Styles/Scripts/popper.min.js"
             ));
         }
     }
