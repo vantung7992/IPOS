@@ -157,6 +157,8 @@
     <Content Include="Styles\Content\tether\tether-theme-basic.min.css" />
     <Content Include="Styles\Content\tether\tether.css" />
     <Content Include="Styles\Content\tether\tether.min.css" />
+    <Content Include="Styles\Content\toastr.min.css" />
+    <Content Include="Styles\Scripts\toastr.min.js" />
     <Content Include="Styles\fonts\fontawesome-webfont.svg" />
     <Content Include="Styles\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
