@@ -126,6 +126,34 @@ namespace IPos.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult CreateNewCategory(string name, int parent_id)
+        {
+            using (IPosEntities ctx = new IPosEntities())
+            {
+                try
+                {
+                    Product_Categories _new_category = new Product_Categories();
+                    _new_category.ID = ctx.Product_Categories.Any() ? ctx.Product_Categories.Max(b => b.ID) + 1 : 1;
+                    _new_category.Name = name;
+                    _new_category.Parent_ID = parent_id;
+                    ctx.Product_Categories.Add(_new_category);
+                    ctx.SaveChanges();
+                    return Json("OK", JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    string msg = ex.Message;
+                    while (ex.InnerException != null)
+                    {
+                        ex = ex.InnerException;
+                        msg = ex.Message;
+                    }
+                    return Json("ERR:" + msg, JsonRequestBehavior.AllowGet);
+                }
+            }
+        }
+
         public static List<Dictionary<string, string>> GetCategoryTree()
         {
             List<Dictionary<string, string>> _category_tree = new List<Dictionary<string, string>>();
@@ -240,7 +268,6 @@ namespace IPos.Controllers
                     _info.Add("Tồn lớn nhất", item.product.Max_Quota.GetValueOrDefault(0).ToString("N0"));
                     _info.Add("Đơn vị tính", item.unit.Name);
                     _info.Add("Quy đổi", item.unit.QuantityPerUnit.GetValueOrDefault(0).ToString("N0"));
-                    _info.Add("Mã hàng đơn vị cơ bản", item.unit.Base_Product_Code);
                     _list_product.Add(_info);
                 }
                 string file_name = string.Format("DanhSachSanPham_{0}.xlsx", DateTime.Now.ToString("yyyyMMdd"));

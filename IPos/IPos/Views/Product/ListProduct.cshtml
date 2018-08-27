@@ -29,11 +29,11 @@
         <table class="table table-responsive table-hover table-bordered">
             <thead>
                 <tr>
-                    <th>Mã hàng hóa</th>
-                    <th>Tên hàng</th>
-                    <th>Giá bán</th>
-                    <th>Giá vốn</th>
-                    <th>Tồn kho</th>
+                    <th style="width:15%">Mã hàng hóa</th>
+                    <th style="width:55%">Tên hàng</th>
+                    <th style="width:10%">Giá bán</th>
+                    <th style="width:10%">Giá vốn</th>
+                    <th style="width:10%">Tồn kho</th>
                 </tr>
             </thead>
             @foreach (var product in Model.listItem)
@@ -41,9 +41,9 @@
                 <tr>
                     <td>@product["CODE"]</td>
                     <td>@product["NAME"]</td>
-                    <td>@product["SELL_PRICE"]</td>
-                    <td>@product["ORIGINAL_PRICE"]</td>
-                    <td>@product["QUANTITY"]</td>
+                    <td style="text-align:right">@product["SELL_PRICE"]</td>
+                    <td style="text-align:right">@product["ORIGINAL_PRICE"]</td>
+                    <td style="text-align:right">@product["QUANTITY"]</td>
                 </tr>
             }
         </table>
@@ -74,6 +74,7 @@
                                     <td style="vertical-align:middle"><b>Nhóm hàng</b></td>
                                     <td>
                                         <select id="category_id" class="form-control">
+                                            <option value="0" selected>-- Lựa chọn --</option>
                                             @{
                                                 var _tree = IPos.Controllers.ProductController.GetCategoryTree();
                                                 if (_tree.Count > 0)
@@ -94,7 +95,7 @@
                                         </select>
                                     </td>
                                     <td class="col-lg-1">
-                                        <button class="btn btn-sm"><i class="fa fa-plus"></i></button>
+                                        <button class="btn btn-sm" onclick="new_category();"><i class="fa fa-plus"></i></button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -138,7 +139,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <button class="btn btn-success" onclick="uploadImage();">Chọn ảnh</button>
+                                        <button class="btn btn-sm btn-success" onclick="uploadImage();">Chọn ảnh</button>
                                         <input type="file" id="imageUploader" style="display:none" onchange="previewFile()" />
                                     </td>
                                 </tr>
@@ -151,37 +152,39 @@
                         <h3 class="panel-title">Đơn vị tính</h3>
                     </div>
                     <div class="panel-body">
-                        <table>
+                        <table style="width:100%">
                             <tr>
-                                <td class="col-lg-2"><b>Đơn vị cơ bản</b></td>
+                                <td class="col-lg-3"><b>Đơn vị cơ bản</b></td>
+                                <td></td>
                             </tr>
                             <tr>
-                                <td style="padding:0px 10px;">
+                                <td style="padding:0px 15px;">
                                     <input class="form-control" type="text" id="unit_name_0" />
                                     <input type="text" id="quantitiesPerUnit_0" value="1" hidden />
                                 </td>
                             </tr>
-                            <tr>
+                            <tr id="more_unit_space" hidden>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr id="more_unit" hidden>
                                 <td class="col-lg-3"><b>Tên đơn vị</b></td>
                                 <td class="col-lg-2"><b>Giá trị quy đổi</b></td>
                                 <td class="col-lg-2"><b>Giá bán</b></td>
                                 <td class="col-lg-3"><b>Mã hàng hóa</b></td>
                                 <td></td>
                             </tr>
-                            <tr>
-                                <td  style="padding:0px 10px;">
-                                    <input class="form-control" />
-                                </td>
-                                <td style="padding:0px 10px;">
-                                    <input class="form-control" />
-                                </td>
-                                <td style="padding:0px 10px;">
-                                    <input class="form-control" />
-                                </td>
-                                <td style="padding:0px 10px;">
-                                    <input class="form-control" />
-                                </td>
-                            </tr>
+                            <tbody id="unit_table">
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:0px 15px;">
+                                        <button class="btn btn-sm btn-success" onclick="addUnit();"><i class="fa fa-plus"></i> Thêm đơn vị</button>
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -212,9 +215,61 @@
     </div>
 </div>
 
+<div class="modal fade" id="createNewCategory" tabindex="-1" role="dialog" aria-labelledby="newCatModalLabel" aria-hidden="true" style="font-family:Arial">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Thêm nhóm hàng</h4>
+            </div>
+            <div class="modal-body">
+                <table style="width:100%">
+                    <tr>
+                        <td class="col-lg-3"><b>Tên nhóm</b></td>
+                        <td class="col-lg-9">
+                            <input class="form-control" id="new_category_name" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-lg-3"><b>Nhóm cha</b></td>
+                        <td class="col-lg-9">
+                            <select class="form-control" id="new_category_parent_id">
+                                <option value="0" selected>-- Lựa chọn --</option>
+                                @{
+                                    if (_tree.Count > 0)
+                                    {
+                                        foreach (var item in _tree)
+                                        {
+                                            string spaces = "";
+                                            for (int i = 0; i < int.Parse(item["LEVEL"]); i++)
+                                            {
+                                                spaces += "&nbsp;&nbsp;&nbsp;&nbsp;";
+                                            }
+                                            <option value="@item["ID"]">
+                                                @Html.Raw(spaces) @item["NAME"]
+                                            </option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success pull-right" onclick="saveCategory();"><i class="fa fa-floppy-o"></i> Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     function new_product() {
         $("#createNewProduct").modal('show');
+    }
+
+    function new_category() {
+        $("#createNewCategory").modal('show');
     }
 
     function uploadImage() {
@@ -305,5 +360,91 @@
                 alert("Có lỗi xảy ra, vui lòng thử lại!")
             }
         });
+    }
+
+    function addUnit() {
+        if (document.getElementById("unit_name_0").value.length == 0) {
+            alert("Cần nhập tên đơn vị cơ bản trước");
+            return;
+        }
+
+        var count = 1;
+        while (document.getElementById("unit_" + count) != null) {
+            count += 1;
+        }
+
+        _inner_html = "<td class='col-lg-3'><input class='form-control' type='text' id='unit_name_" + count + "' /></td>";
+        _inner_html += "<td class='col-lg-2'><input class='form-control' type='text' id='quantitiesPerUnit_" + count + "' value='1' onchange='changeSellPrice(" + count + ")' /></td>";
+        _inner_html += "<td class='col-lg-2'><input class='form-control' type='text' id='sell_price_" + count + "' value='" + document.getElementById("sell_price_0").value + "' /></td>";
+        _inner_html += "<td class='col-lg-3'><input class='form-control' type='text' placeholder='Mã hàng tự động' id='barcode_" + count + "' /></td>";
+        _inner_html += "<td><button id='btn_remove_" + count + "' class='btn btn-sm' onclick='remove_unit(" + count + ")'><i class='fa fa-close'></i></button></td>";
+        var _tr_node = document.createElement("tr");
+        _tr_node.id = "unit_" + count;
+        _tr_node.innerHTML = _inner_html;
+        document.getElementById("more_unit").hidden = false;
+        document.getElementById("more_unit_space").hidden = false;
+        document.getElementById("unit_table").appendChild(_tr_node);
+    }
+
+    function remove_unit(unit_id) {
+        var node = document.getElementById("unit_" + unit_id);
+        node.parentNode.removeChild(node);
+
+        var count = unit_id + 1;
+        while (document.getElementById("unit_" + count) != null) {
+            var new_id = count - 1;
+            document.getElementById("unit_" + count).id = "unit_" + (new_id);
+            document.getElementById("unit_name_" + count).id = "unit_name_" + (new_id);
+            document.getElementById("quantitiesPerUnit_" + count).id = "quantitiesPerUnit_" + (new_id);
+            document.getElementById("sell_price_" + count).id = "sell_price_" + (new_id);
+            document.getElementById("barcode_" + count).id = "barcode_" + (new_id);
+            document.getElementById("btn_remove_" + count).setAttribute("onClick", "javascript: remove_unit(" + (new_id) + ");");
+            document.getElementById("btn_remove_" + count).id = "btn_remove_" + (new_id);
+            count += 1;
+        }
+
+        if (document.getElementById("unit_1") == null) {
+            document.getElementById("more_unit").hidden = true;
+            document.getElementById("more_unit_space").hidden = true;
+        }
+    }
+
+    function changeSellPrice(unit_id) {
+        document.getElementById("sell_price_" + unit_id).value = document.getElementById("quantitiesPerUnit_" + unit_id).value * document.getElementById("sell_price_0").value;
+    }
+
+    function saveCategory() {
+        var _name = document.getElementById("new_category_name").value;
+        if (_name.length > 0) {
+            var _parent_id = document.getElementById("new_category_parent_id").value;
+            $.ajax({
+                type: "post",
+                url: '@Url.Action("CreateNewCategory", "Product")',
+                data: {
+                    name: _name,
+                    parent_id: _parent_id
+                },
+                cache: false,
+                dataType: 'text',
+                success: function (data) {
+                    if (data == null) {
+                        alert("Có lỗi xảy ra, vui lòng thử lại!")
+                    }
+                    else {
+                        if (data.indexOf("ERR:") == 0)
+                            alert(data.replace("ERR:", ""));
+                        else
+                            alert(data);
+                    }
+                },
+                error: function (data) {
+                    alert("Có lỗi xảy ra, vui lòng thử lại!")
+                }
+            });
+        }
+        else {
+            alert("Chưa điền tên nhóm hàng !");
+            document.getElementById("new_category_name").focus();
+        }
     }
 </script>
