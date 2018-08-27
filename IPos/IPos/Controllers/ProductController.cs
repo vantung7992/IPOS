@@ -38,7 +38,7 @@ namespace IPos.Controllers
                     for (int i = 0; i < barcode.Length; i++)
                     {
                         Product_Unit _new_product_unit = new Product_Unit();
-                        _new_product_unit.Product_Code = barcode[i].Length > 0 ? barcode[i] : string.Format("P{0}", (++default_bar_code).ToString("D" + _product_code_number_length));
+                        _new_product_unit.Product_Code = i == 0 ? base_product_code : barcode[i].Length > 0 ? barcode[i] : string.Format("P{0}", (++default_bar_code).ToString("D" + _product_code_number_length));
                         _new_product_unit.Product_ID = _new_product.ID;
                         _new_product_unit.Base_Product_Code = base_product_code;
                         _new_product_unit.Name = unit_name[i];
