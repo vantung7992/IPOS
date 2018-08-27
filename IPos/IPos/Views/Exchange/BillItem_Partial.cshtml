@@ -1,12 +1,6 @@
 ﻿@model List<IPos.Controllers.BillItem>
 <style type="text/css">
-    .form-control {
-        width: 120px;
-    }
 
-    .popover {
-        max-width: 400px;
-    }
 </style>
 <input type="hidden" id="hdBillCurrenr" value="@ViewBag.BillCurrent" />
 <table class="table table-hover">
@@ -19,29 +13,37 @@
             <td>@item.Product_Unit.Product_Code</td>
             <td>@item.Product.Name</td>
             <td><button><i class="fa fa-plus"></i></button> @item.Quantity <button><i class="fa fa-minus"></i></button></td>
-            <td><a class="priceBillItem" productCode="@item.Product_Unit.Product_Code" data-placement="left" data-toggle="popover" data-title="" data-container="body" type="button" data-html="true" href="#">@item.Product_Unit.Sell_Price.GetValueOrDefault(0)</a></td>
+            <td>
+                <a class="priceBillItem" productCode=@item.Product_Unit.Product_Code price=@item.Product_Unit.Sell_Price discount=0 data-placement="left" data-toggle="popover" data-title="" data-container="body" type="button" data-html="true" href="javascript:void(0)">@item.Product_Unit.Sell_Price.GetValueOrDefault(0)</a>
+                <span class="discountBillItem"></span>
+            </td>
             <td>@(item.Product_Unit.Sell_Price.GetValueOrDefault(0) * item.Quantity)</td>
         </tr>
         stt++;
     }
 </table>
-<div id="popover-content" class="hide">
-    <div class="form-inline">
-        <div class="form-group">
-            <div>
-                <span>Giá mới</span>
-                <input type="text" placeholder="Name" class="form-control" maxlength="5">
-            </div>
-            <div>
-                <span>Giảm giá</span>
-                <input type="text" placeholder="Name" class="form-control" maxlength="5">
-                <button type="submit" class="btn btn-primary">VND</button>
-                <button type="submit" class="btn btn-primary">%</button>
-            </div>
-        </div>
-    </div>
-</div>
+@*<div id="popover-content" class="hide">
+        <table>
+            <tr>
+                <td>Giá mới</td>
+                <td colspan="2"><input id="billItemNewPrice" type="text"></td>
+            </tr>
+            <tr>
+                <td>Giảm giá</td>
+                <td>
+                    <input id="billItemDiscount" type="text" style="width: 100px;">
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <button class="btn btn-sm bg-olive btn-flat">VND</button>
+                        <button class="btn btn-sm btn-flat">%</button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>*@
 <script type="text/javascript">
+    /*Function*/
     function DelBillItem(billNumber, productCode) {
         $.ajax({
             url: '@Url.Action("DeleteBillItem","Exchange")',
@@ -71,10 +73,42 @@
     $("[data-toggle=popover]").popover({
         html: true,
         content: function () {
-            return $('#popover-content').html();
+            var html = "<table>"
+            html += "<tr>"
+            html += "<td>Giá mới</td>"
+            html += "<td colspan='2'><input id='billItemNewPrice' type='text'></td>"
+            html += "</tr>"
+            html += "<tr>"
+            html += "<td>Giảm giá</td>"
+            html += "<td>"
+            html += "<input id='billItemDiscount' type='text' style='width: 100px;'>"
+            html += "</td>"
+            html += "<td>"
+            html += "<div class='btn-group'>"
+            html += "<button class='btn btn-sm bg-olive btn-flat'>VND</button>"
+            html += "<button class='btn btn-sm btn-flat'>%</button>"
+            html += "</div>"
+            html += "</td>"
+            html += "</tr>"
+            html += "</table>"
+            return html;
         },
     });
-    $('.priceBillItem').on('inserted.bs.popover', function () {
-        alert($(this).attr("productCode"));
+    $('.priceBillItem').on('shown.bs.popover', function () {
+        var price = parseFloat($(this).attr("price"));
+        var discount = parseFloat($(this).attr("discount"));
+        var newPrice = price - discount;
+        $('#billItemNewPrice').val(newPrice);
     })
+    $('.priceBillItem').on('shown.bs.popover', function () {
+        var price = parseFloat($(this).attr("price"));
+        var discount = parseFloat($(this).attr("discount"));
+        var newPrice = price - discount;
+        $('#billItemNewPrice').val(newPrice);
+
+        $('#billItemNewPrice').keyup(function () {
+            alert($(this).attr("price"));
+        })
+    })
+    ;
 </script>
