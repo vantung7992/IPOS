@@ -1,0 +1,44 @@
+﻿@using IPos.Controllers
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        @@font-face {
+            font-family: 'code128';
+            src: url('../../Styles/fonts/code128.ttf') format('truetype');
+        }
+
+        p {
+            margin: 0px;
+        }
+    </style>
+</head>
+<body style="padding: 0; margin: 0; font-family: 'arial courier new';">
+    <table style="text-align: center">
+        <tr>
+            <td style="width: 130px; height: 85px; padding:0px">
+                <p style="font-size: 13px; margin-top: 5px;"><b>@ViewBag.Name</b></p>
+                <p style="font-family: 'code128'; font-size: 35px;">
+                    @ViewBag.Barcode
+                </p>
+                <p style="font-size: 10px;">@ViewBag.Product_code</p>
+                <p style="font-size: 13px;">@ViewBag.Price</p>
+            </td>
+            <td style="width: 2px"></td>
+            <td style="width: 130px; height: 85px; padding:0px">
+                <p style="font-size: 13px; margin-top: 5px;"><b>@ViewBag.Name</b></p>
+                <p style="font-family: 'code128'; font-size: 35px;">
+                    @ViewBag.Barcode
+                </p>
+                <p style="font-size: 10px;">@ViewBag.Product_code</p>
+                <p style="font-size: 13px;">@ViewBag.Price</p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
