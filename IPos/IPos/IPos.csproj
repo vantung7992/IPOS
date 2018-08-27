@@ -72,6 +72,9 @@
       <HintPath>..\packages\FastMember.Signed.1.3.0\lib\net45\FastMember.Signed.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="IDAutomation.NetAssembly">
+      <HintPath>..\..\dll\IDAutomation.NetAssembly.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.5.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -160,6 +163,7 @@
     <Content Include="Styles\fonts\fontawesome-webfont.svg" />
     <Content Include="Styles\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Styles\Images\Giay_in_35x25.png" />
     <Content Include="Styles\Scripts\bootstrap.js" />
     <Content Include="Styles\Scripts\bootstrap.min.js" />
     <Content Include="Styles\fonts\fontawesome-webfont.eot" />
@@ -200,6 +204,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ExchangeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PrinterController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -279,6 +284,9 @@
     <Content Include="Views\Exchange\BillItem_Partial.cshtml" />
     <Content Include="Views\Product\New.cshtml" />
     <Content Include="Views\Product\ListProduct.cshtml" />
+    <Content Include="Views\Printer\PrintBarcode.cshtml" />
+    <Content Include="Views\Printer\PrintBill.cshtml" />
+    <Content Include="Views\Printer\PrintProduct.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
