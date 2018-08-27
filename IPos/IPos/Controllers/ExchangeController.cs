@@ -26,7 +26,6 @@ namespace IPos.Controllers
             else
             {
                 //Create new a bill and add to list bill
-
                 var bill = new Bill
                 {
                     BillNumber = 1,
@@ -129,22 +128,25 @@ namespace IPos.Controllers
         }
 
         //update Bill item
-        public JsonResult UpdateBillItem(string billItemModel)
+        public JsonResult UpdateBillItem(int billNumber, string productCode, int quantity, decimal discount)
         {
-            var jsonBill = new JavaScriptSerializer().Deserialize<List<BillItem>>(billItemModel);
-            var sessionBill = (List<BillItem>)Session[BillSession];
-            foreach (var item in sessionBill)
+            var billSession = Session[BillSession];
+            if (billSession == null)
+                return Json(new { success = false, msg = "Lỗi: Session null" }, JsonRequestBehavior.AllowGet);
+            var listBill = (List<Bill>)Session[BillSession];
+            var bill = listBill.SingleOrDefault(x => x.BillNumber == billNumber);
+            if (bill != null)
             {
-                var jsonItem = jsonBill.SingleOrDefault(x => x.Product_Unit.Product_Code == item.Product_Unit.Product_Code);
-                if (jsonItem != null)
+                var billItem = bill.BillItems.SingleOrDefault(x => x.Product_Unit.Product_Code == productCode);
+                if (billItem != null)
                 {
-                    item.Quantity = jsonItem.Quantity;
-                    break;
+                    billItem.Quantity = quantity;
+                    billItem.Discount = discount;
+                    Session[BillSession] = listBill;
+                    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
                 }
             }
-            Session[BillSession] = sessionBill;
-
-            return Json(new { success = true });
+            return Json(new { success = false, msg = "Lỗi: Session null" }, JsonRequestBehavior.AllowGet);
         }
 
         //delete Bill item
@@ -227,5 +229,6 @@ namespace IPos.Controllers
         public Products Product { get; set; }
         public Product_Unit Product_Unit { get; set; }
         public int Quantity { get; set; }
+        public decimal Discount { get; set; }
     }
 }

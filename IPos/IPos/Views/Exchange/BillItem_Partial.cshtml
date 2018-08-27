@@ -1,8 +1,8 @@
 ﻿@model List<IPos.Controllers.BillItem>
 <style type="text/css">
-
 </style>
 <input type="hidden" id="hdBillCurrenr" value="@ViewBag.BillCurrent" />
+<input type="hidden" id="hdBillItemCurrent" />
 <table class="table table-hover">
     @{ var stt = 1;}
     @foreach (var item in Model)
@@ -14,7 +14,9 @@
             <td>@item.Product.Name</td>
             <td><button><i class="fa fa-plus"></i></button> @item.Quantity <button><i class="fa fa-minus"></i></button></td>
             <td>
-                <a class="priceBillItem" productCode=@item.Product_Unit.Product_Code price=@item.Product_Unit.Sell_Price discount=0 data-placement="left" data-toggle="popover" data-title="" data-container="body" type="button" data-html="true" href="javascript:void(0)">@item.Product_Unit.Sell_Price.GetValueOrDefault(0)</a>
+                <a class="priceBillItem" id="billItem-@item.Product_Unit.Product_Code" productCode=@item.Product_Unit.Product_Code price=@item.Product_Unit.Sell_Price discount="0" data-placement="left" data-toggle="popover" data-title="" data-container="body" type="button" data-html="true" href="javascript:void(0)">
+                    @(item.Product_Unit.Sell_Price.GetValueOrDefault(0) - item.Discount )
+                </a>
                 <span class="discountBillItem"></span>
             </td>
             <td>@(item.Product_Unit.Sell_Price.GetValueOrDefault(0) * item.Quantity)</td>
@@ -22,26 +24,6 @@
         stt++;
     }
 </table>
-@*<div id="popover-content" class="hide">
-        <table>
-            <tr>
-                <td>Giá mới</td>
-                <td colspan="2"><input id="billItemNewPrice" type="text"></td>
-            </tr>
-            <tr>
-                <td>Giảm giá</td>
-                <td>
-                    <input id="billItemDiscount" type="text" style="width: 100px;">
-                </td>
-                <td>
-                    <div class="btn-group">
-                        <button class="btn btn-sm bg-olive btn-flat">VND</button>
-                        <button class="btn btn-sm btn-flat">%</button>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>*@
 <script type="text/javascript">
     /*Function*/
     function DelBillItem(billNumber, productCode) {
@@ -61,6 +43,23 @@
             }
         });
     }
+    function UpdateBillItem(billNumber, productCode, quantity, discount) {
+        debugger;
+        $.ajax({
+            url: '@Url.Action("UpdateBillItem", "Exchange")',
+            data: { billNumber: billNumber, productCode: productCode, quantity: quantity, discount: discount },
+            type: 'GET',
+            dataType: 'JSON',
+            success: function (result) {
+                if (!result.success) {
+                    alert(result.msg);
+                }
+            },
+            error: function () {
+            }
+        });
+    }
+
     $(document).on('click', function (e) {
         $('[data-toggle="popover"],[data-original-title]').each(function () {
             //the 'is' for buttons that trigger popups
@@ -95,20 +94,26 @@
         },
     });
     $('.priceBillItem').on('shown.bs.popover', function () {
-        var price = parseFloat($(this).attr("price"));
-        var discount = parseFloat($(this).attr("discount"));
-        var newPrice = price - discount;
-        $('#billItemNewPrice').val(newPrice);
-    })
-    $('.priceBillItem').on('shown.bs.popover', function () {
-        var price = parseFloat($(this).attr("price"));
-        var discount = parseFloat($(this).attr("discount"));
-        var newPrice = price - discount;
-        $('#billItemNewPrice').val(newPrice);
+        $('#hdBillItemCurrent').val($(this).attr("id"));
+
+        var txtNewPricePopover = parseFloat($(this).attr("price"))- parseFloat($(this).attr("discount"));
+        
+        $('#billItemNewPrice').val(txtNewPricePopover);
 
         $('#billItemNewPrice').keyup(function () {
-            alert($(this).attr("price"));
-        })
-    })
-    ;
+            var idBilItemInActive = $('#hdBillItemCurrent').val();
+            var price = parseFloat($('#' + idBilItemInActive).attr("price"));
+            var newPrice = parseFloat($('#billItemNewPrice').val());
+            $('#' + idBilItemInActive).html(newPrice);
+            $('#' + idBilItemInActive).attr("discount", newPrice);;
+        });
+        $('#billItemNewPrice').change(function () {
+            //update session
+            var idBilItemInActive = $('#hdBillItemCurrent').val();
+            var billNumber = $('#hdBillCurrenr').val();
+            var productCode = $('#' + idBilItemInActive).attr("productCode");
+            var discount = parseFloat($('#' + idBilItemInActive).attr("discount"));
+            UpdateBillItem(billNumber, productCode,1,discount);
+        });
+    });
 </script>
