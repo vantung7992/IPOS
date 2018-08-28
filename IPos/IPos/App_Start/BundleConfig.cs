@@ -11,20 +11,20 @@ namespace IPos.App_Start
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Styles/AdminLTE/bower_components/bootstrap/dist/css/bootstrap.min.css",
-                "~/Styles/AdminLTE/bower_components/font-awesome/css/font-awesome.min.css",
-                "~/Styles/AdminLTE/bower_components/Ionicons/css/ionicons.min.css",
+                "~/Styles/AdminLTE/bootstrap/css/bootstrap.min.css",
+                "~/Styles/Content/font-awesome.min.css",
+                "~/Styles/Content/ionicons.min.css",
                 "~/Styles/AdminLTE/dist/css/AdminLTE.min.css",
                 "~/Styles/AdminLTE/dist/css/skins/_all-skins.min.css",
                 "~/Styles/content/toastr.min.css"
             ));
 
             bundles.Add(new ScriptBundle("~/Content/js").Include(
-                "~/Styles/AdminLTE/bower_components/jquery/dist/jquery.min.js",
-                "~/Styles/AdminLTE/bower_components/bootstrap/dist/js/bootstrap.min.js",
-                "~/Styles/AdminLTE/bower_components/jquery-slimscroll/jquery.slimscroll.min.js",
-                "~/Styles/AdminLTE/bower_components/fastclick/lib/fastclick.js",
-                "~/Styles/AdminLTE/dist/js/adminlte.min.js",
+                "~/Styles/AdminLTE/plugins/jQuery/jquery-2.2.3.min.js",
+                "~/Styles/AdminLTE/bootstrap/js/bootstrap.min.js",
+                "~/Styles/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js",
+                "~/Styles/AdminLTE/plugins/fastclick/fastclick.min.js",
+                "~/Styles/AdminLTE/dist/js/app.min.js",
                 "~/Styles/Scripts/popper.min.js",
                 "~/Styles/Scripts/toastr.min.js"
             ));

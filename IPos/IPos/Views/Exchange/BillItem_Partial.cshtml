@@ -95,25 +95,31 @@
     });
     $('.priceBillItem').on('shown.bs.popover', function () {
         $('#hdBillItemCurrent').val($(this).attr("id"));
+        $('#billItemNewPrice').val($.trim($(this).text()));
 
-        var txtNewPricePopover = parseFloat($(this).attr("price"))- parseFloat($(this).attr("discount"));
-        
-        $('#billItemNewPrice').val(txtNewPricePopover);
+        PopoverBillItem_KeyUp();
+        PopoverBillItem_Change();
+    });
 
+    function PopoverBillItem_KeyUp() {
         $('#billItemNewPrice').keyup(function () {
             var idBilItemInActive = $('#hdBillItemCurrent').val();
             var price = parseFloat($('#' + idBilItemInActive).attr("price"));
             var newPrice = parseFloat($('#billItemNewPrice').val());
             $('#' + idBilItemInActive).html(newPrice);
-            $('#' + idBilItemInActive).attr("discount", newPrice);;
+            $('#' + idBilItemInActive).attr("discount", price - newPrice);;
         });
+    }
+    function PopoverBillItem_Change() {
         $('#billItemNewPrice').change(function () {
             //update session
             var idBilItemInActive = $('#hdBillItemCurrent').val();
             var billNumber = $('#hdBillCurrenr').val();
             var productCode = $('#' + idBilItemInActive).attr("productCode");
             var discount = parseFloat($('#' + idBilItemInActive).attr("discount"));
-            UpdateBillItem(billNumber, productCode,1,discount);
+            var quantity = 1;
+            UpdateBillItem(billNumber, productCode, quantity, discount);
         });
-    });
+    }
+
 </script>
