@@ -1,5 +1,17 @@
 ﻿@model List<IPos.Controllers.BillItem>
 <style type="text/css">
+    .custom-change-quantity {
+        font-weight:bold;
+        font-size:20px;
+        height:30px;
+        padding-top:0px;
+    }
+
+    .form-control-price {
+        height:30px;
+        border-radius:5px;
+        text-align:right;
+    }
 </style>
 <input type="hidden" id="hdBillCurrenr" value="@ViewBag.BillCurrent" />
 <input type="hidden" id="hdBillItemCurrent" />
@@ -8,18 +20,31 @@
     @foreach (var item in Model)
     {
         <tr>
-            <td><a href="javascript:void(0)" onclick="DelBillItem(@ViewBag.BillCurrent,'@item.Product_Unit.Product_Code');"> <i class="fa fa-remove"></i> </a></td>
-            <td>@stt</td>
-            <td>@item.Product_Unit.Product_Code</td>
+            <td style="width:2%">@stt</td>
+            <td style="width:2%"><a href="javascript:void(0)" onclick="DelBillItem(@ViewBag.BillCurrent,'@item.Product_Unit.Product_Code');"> <i class="fa fa-close" style="color:#ccc;margin-left:5px;" onclick="alert(2);"></i></a></td>
+            <td style="width:9%">@item.Product_Unit.Product_Code</td>
             <td>@item.Product.Name</td>
-            <td><button><i class="fa fa-plus"></i></button> @item.Quantity <button><i class="fa fa-minus"></i></button></td>
-            <td>
-                <a class="priceBillItem" id="billItem-@item.Product_Unit.Product_Code" productCode=@item.Product_Unit.Product_Code price=@item.Product_Unit.Sell_Price discount="0" data-placement="left" data-toggle="popover" data-title="" data-container="body" type="button" data-html="true" href="javascript:void(0)">
-                    @(item.Product_Unit.Sell_Price.GetValueOrDefault(0) - item.Discount )
-                </a>
+            <td style="width:15%">
+                <table>
+                    <tr>
+                        <td><button class="btn btn-sm custom-change-quantity" onclick="change_quantity(-1, '@item.Product_Unit.Product_Code')"><i class="fa fa-angle-down"></i></button></td>
+                        <td>
+                            <input id="billItem_quantity_@item.Product_Unit.Product_Code" class="form-control form-control-price" value="@item.Quantity.ToString("N0")" />
+                        </td>
+                        <td><button class="btn btn-sm custom-change-quantity" onclick="change_quantity(1, '@item.Product_Unit.Product_Code')"><i class="fa fa-angle-up"></i></button></td>
+                    </tr>
+                </table>
+                
+            </td>
+            <td style="width:15%; text-align:right;">
+                <input class="form-control form-control-price" id="billItem_price_@item.Product_Unit.Product_Code" value="@((item.Product_Unit.Sell_Price.GetValueOrDefault(0) - item.Discount ).ToString("N0"))" />
+
+                @*<a class="priceBillItem" id="billItem-@item.Product_Unit.Product_Code" productCode=@item.Product_Unit.Product_Code price=@item.Product_Unit.Sell_Price discount="0" data-placement="left"  data-title="" data-container="body" type="button" data-html="true" href="javascript:void(0)">
+                    
+                </a>*@
                 <span class="discountBillItem"></span>
             </td>
-            <td>@(item.Product_Unit.Sell_Price.GetValueOrDefault(0) * item.Quantity)</td>
+            <td id="billItem_totalPrice_@item.Product_Unit.Product_Code" style="width:15%; text-align:right; font-weight:bolder; vertical-align:middle">@((item.Product_Unit.Sell_Price.GetValueOrDefault(0) * item.Quantity).ToString("N0"))</td>
         </tr>
         stt++;
     }
@@ -43,8 +68,8 @@
             }
         });
     }
+
     function UpdateBillItem(billNumber, productCode, quantity, discount) {
-        debugger;
         $.ajax({
             url: '@Url.Action("UpdateBillItem", "Exchange")',
             data: { billNumber: billNumber, productCode: productCode, quantity: quantity, discount: discount },
@@ -53,73 +78,86 @@
             success: function (result) {
                 if (!result.success) {
                     alert(result.msg);
+                    return;
                 }
+                document.getElementById("billItem_quantity_" + productCode).value = quantity;
+                document.getElementById("billItem_totalPrice_" + productCode).innerHTML = SO_CSO(quantity * CSO_SO(document.getElementById("billItem_price_" + productCode).value));
             },
             error: function () {
             }
         });
     }
 
-    $(document).on('click', function (e) {
-        $('[data-toggle="popover"],[data-original-title]').each(function () {
-            //the 'is' for buttons that trigger popups
-            //the 'has' for icons within a button that triggers a popup
-            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-                (($(this).popover('hide').data('bs.popover') || {}).inState || {}).click = false  // fix for BS 3.3.6
-            }
-        });
-    });
-    $("[data-toggle=popover]").popover({
-        html: true,
-        content: function () {
-            var html = "<table>"
-            html += "<tr>"
-            html += "<td>Giá mới</td>"
-            html += "<td colspan='2'><input id='billItemNewPrice' type='text'></td>"
-            html += "</tr>"
-            html += "<tr>"
-            html += "<td>Giảm giá</td>"
-            html += "<td>"
-            html += "<input id='billItemDiscount' type='text' style='width: 100px;'>"
-            html += "</td>"
-            html += "<td>"
-            html += "<div class='btn-group'>"
-            html += "<button class='btn btn-sm bg-olive btn-flat'>VND</button>"
-            html += "<button class='btn btn-sm btn-flat'>%</button>"
-            html += "</div>"
-            html += "</td>"
-            html += "</tr>"
-            html += "</table>"
-            return html;
-        },
-    });
-    $('.priceBillItem').on('shown.bs.popover', function () {
-        $('#hdBillItemCurrent').val($(this).attr("id"));
-        $('#billItemNewPrice').val($.trim($(this).text()));
-
-        PopoverBillItem_KeyUp();
-        PopoverBillItem_Change();
-    });
-
-    function PopoverBillItem_KeyUp() {
-        $('#billItemNewPrice').keyup(function () {
-            var idBilItemInActive = $('#hdBillItemCurrent').val();
-            var price = parseFloat($('#' + idBilItemInActive).attr("price"));
-            var newPrice = parseFloat($('#billItemNewPrice').val());
-            $('#' + idBilItemInActive).html(newPrice);
-            $('#' + idBilItemInActive).attr("discount", price - newPrice);;
-        });
-    }
-    function PopoverBillItem_Change() {
-        $('#billItemNewPrice').change(function () {
-            //update session
-            var idBilItemInActive = $('#hdBillItemCurrent').val();
-            var billNumber = $('#hdBillCurrenr').val();
-            var productCode = $('#' + idBilItemInActive).attr("productCode");
-            var discount = parseFloat($('#' + idBilItemInActive).attr("discount"));
-            var quantity = 1;
-            UpdateBillItem(billNumber, productCode, quantity, discount);
-        });
+    function change_quantity(quantity, code) {
+        var billNumber = $('#hdBillCurrenr').val();
+        quantity = parseInt(quantity) + parseInt(document.getElementById("billItem_quantity_" + code).value);
+        quantity = quantity < 1 ? 1 : quantity;
+        var idBilItemInActive = $('#hdBillItemCurrent').val();
+        UpdateBillItem(billNumber, code, quantity, 0);
     }
 
+    //$(document).on('click', function (e) {
+    //    $('[data-toggle="popover"],[data-original-title]').each(function () {
+    //        //the 'is' for buttons that trigger popups
+    //        //the 'has' for icons within a button that triggers a popup
+    //        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+    //            (($(this).popover('hide').data('bs.popover') || {}).inState || {}).click = false  // fix for BS 3.3.6
+    //        }
+    //    });
+    //});
+
+    //$("[data-toggle=popover]").popover({
+    //    html: true,
+    //    content: function () {
+    //        var html = "<table>"
+    //        html += "<tr>"
+    //        html += "<td>Giá mới</td>"
+    //        html += "<td colspan='3'><input class='form-control-price' id='billItemNewPrice' type='text'></td>"
+    //        html += "</tr>"
+    //        html += "<tr>"
+    //        html += "<td>Giảm giá</td>"
+    //        html += "<td>"
+    //        html += "<input class='form-control-price' id='billItemDiscount' type='text'>"
+    //        html += "</td>"
+    //        html += "<td>"
+    //        html += "<div class='btn-group'>"
+    //        html += "<button class='btn btn-sm bg-olive btn-flat'>VND</button>"
+    //        html += "<button class='btn btn-sm btn-flat'>%</button>"
+    //        html += "</div>"
+    //        html += "</td>"
+    //        html += "</tr>"
+    //        html += "</table>"
+    //        return html;
+    //    },
+    //});
+
+    //$('.priceBillItem').on('shown.bs.popover', function () {
+    //    $('#hdBillItemCurrent').val($(this).attr("id"));
+    //    $('#billItemNewPrice').val($.trim($(this).text()));
+
+    //    PopoverBillItem_KeyUp();
+    //    PopoverBillItem_Change();
+    //});
+
+    //function PopoverBillItem_KeyUp() {
+    //    $('#billItemNewPrice').keyup(function () {
+    //        var idBilItemInActive = $('#hdBillItemCurrent').val();
+    //        var price = parseFloat($('#' + idBilItemInActive).attr("price"));
+    //        var newPrice = parseFloat($('#billItemNewPrice').val());
+    //        $('#' + idBilItemInActive).html(newPrice);
+    //        $('#' + idBilItemInActive).attr("discount", price - newPrice);;
+    //    });
+    //}
+
+    //function PopoverBillItem_Change() {
+    //    $('#billItemNewPrice').change(function () {
+    //        //update session
+    //        var idBilItemInActive = $('#hdBillItemCurrent').val();
+    //        var billNumber = $('#hdBillCurrenr').val();
+    //        var productCode = $('#' + idBilItemInActive).attr("productCode");
+    //        var discount = parseFloat($('#' + idBilItemInActive).attr("discount"));
+    //        var quantity = 1;
+    //        UpdateBillItem(billNumber, productCode, quantity, discount);
+    //    });
+    //}
 </script>

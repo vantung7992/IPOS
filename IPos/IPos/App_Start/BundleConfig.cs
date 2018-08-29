@@ -26,7 +26,8 @@ namespace IPos.App_Start
                 "~/Styles/AdminLTE/plugins/fastclick/fastclick.min.js",
                 "~/Styles/AdminLTE/dist/js/app.min.js",
                 "~/Styles/Scripts/popper.min.js",
-                "~/Styles/Scripts/toastr.min.js"
+                "~/Styles/Scripts/toastr.min.js",
+                "~/Styles/Scripts/ais.js"
             ));
         }
     }

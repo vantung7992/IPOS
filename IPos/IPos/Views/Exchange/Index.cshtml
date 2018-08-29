@@ -11,8 +11,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
+    <style>
+        .custom-remove-btn {
+            
+        }
+
+        .custom-remove-btn :hover {
+            cursor:pointer;
+        }
+    </style>
 </head>
-<body class="skin-blue-light layout-top-nav" style="padding-top: inherit">
+<body class="skin-blue-light layout-top-nav" style="padding-top: inherit; font-family:Arial, Helvetica, sans-serif; font-size:small" onload="javascript:max()">
     <div class="wrapper" style="height: auto; min-height: 100%;">
         <header class="main-header" id="main_header">
             <nav class="navbar navbar-static-top">
@@ -44,13 +53,10 @@
                             @foreach (var item in Model)
                             {
                                 <li billNumber="@item.BillNumber">
-                                    <a href="javascript:void(0)" onclick="GetBillDetail(@item.BillNumber)">Hóa đơn @item.BillNumber</a>
-                                    <a href='@Url.Action("DeleteBill","Exchange",new {billNumber = item.BillNumber })' style="display:inline-block">
-                                        <i class="fa fa-close"></i>
-                                    </a>
+                                    <a href="javascript:void(0)" onclick="GetBillDetail(@item.BillNumber)">Hóa đơn @item.BillNumber <i class="fa fa-close" style="color:#ccc;margin-left:5px;" onclick="alert(1);"></i></a>
                                 </li>
                             }
-                            <li class=""><a href='@Url.Action("AddBill","Exchange")'><i class="fa fa-plus"></i></a></li>
+                            <li class=""><a href='@Url.Action("AddBill","Exchange")'><i class="fa fa-plus custom-close-btn"></i></a></li>
                         </ul>
                     </div>
                     <hr />
@@ -62,13 +68,16 @@
                     </div>
                 </div>
             </div>
-            <footer>
-                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-            </footer>
         </section>
     </div>
     @Scripts.Render("~/Content/js")
     <script type="text/javascript">
+        function max()
+        {
+            var obj = new ActiveXObject("Wscript.shell");
+            obj.SendKeys("{f11}");
+        }
+
         $('#txtSearch').keyup(function (e) {
             var productCode = $('#txtSearch').val();
 
@@ -90,6 +99,10 @@
                 success: function () {
                 }
             });
+        }
+
+        function DeleteBill() {
+            //if
         }
 
         function AddBillItem(productCode) {

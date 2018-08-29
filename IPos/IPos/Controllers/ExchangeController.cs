@@ -143,7 +143,7 @@ namespace IPos.Controllers
                     billItem.Quantity = quantity;
                     billItem.Discount = discount;
                     Session[BillSession] = listBill;
-                    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                    return Json(new { success = true, msg = "" }, JsonRequestBehavior.AllowGet);
                 }
             }
             return Json(new { success = false, msg = "Lỗi: Session null" }, JsonRequestBehavior.AllowGet);
