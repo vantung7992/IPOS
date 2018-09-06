@@ -1,25 +1,26 @@
 ﻿@using System.Web.Optimization
+@model IPos.Controllers.BillInfor
 @{
     Layout = null;
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
+
     @Styles.Render("~/Content/css")
     @*<style>
-        body.receipt .sheet {
-            width: 58mm;
-            height: 100mm
-        }
-        /* change height as you like */
-        @@media print {
-            body.receipt {
-                width: 58mm
+            body.receipt .sheet {
+                width: 58mm;
+                height: 100mm
             }
-        }
-    /* this line is needed for fixing Chrome's bug */
-    </style>*@
+            /* change height as you like */
+            @@media print {
+                body.receipt {
+                    width: 58mm
+                }
+            }
+        /* this line is needed for fixing Chrome's bug */
+        </style>*@
 </head>
 <body>
     <section class="col-md-6">
@@ -37,23 +38,26 @@
                 </style>
                 <table style="width:100%;">
                     <tbody>
-                    <tr>
-                        <td rowspan="3">&nbsp;</td>
-                        <td><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Tên cửa hàng</span></span></td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Chi nhánh: Chi nhánh trung tâm</span></span></td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Điện thoại: </span></span></td>
-                    </tr>
+                        <tr>
+                            <td rowspan="3">&nbsp;</td>
+                            <td><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;"></span>Tên cửa hàng: @Model.Shop.Name</span></td>
+                        </tr>
+                        <tr>
+                            <td><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Địa chỉ: @Model.Shop.Address</span></span></td>
+                        </tr>
+                        <tr>
+                            <td><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Điện thoại: @Model.Shop.Phone</span></span></td>
+                        </tr>
                     </tbody>
                 </table>
-                <div style="border-bottom:1px dashed black;">&nbsp;</div><div><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Ngày bán:  08/05/2014 08:56 </span></span></div><div style="text-align:center;">
+                <div style="border-bottom:1px dashed black;">&nbsp;</div><div><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Ngày bán: </span></span></div><div style="text-align:center;">
                     <br><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;"><strong>HOÁ ĐƠN BÁN HÀNG</strong></span></span>
-                    <br><span style="font-size:10px;"><span style="font-family:arial,helvetica,sans-serif;"><strong>HD000001</strong></span></span>
-                </div><div><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;"><strong>Khách hàng:</strong> Mạnh đít cong</span></span></div><div><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Địa chỉ: Kim Chung - Đông Anh</span></span></div><div><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Khu vực: Hà Nội</span></span></div><div><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Thời gian giao hàng:  31/12/2017 22:30 </span></span></div><div><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Điện thoại: </span></span></div><div style="border-bottom:1px dashed black;">
-                    <p><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;"><strong>Người bán:</strong> Nguyễn Ngọc Phương</span></span></p>
+                    <br><span style="font-size:10px;"><span style="font-family:arial,helvetica,sans-serif;"><strong>@Model.Transaction.code</strong></span></span>
+                </div><div><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;"><strong>Khách hàng:</strong> @Model.Partner.Name</span></span></div>
+                <div><span style="font-size: 11px;"><span style="font-family: arial, helvetica, sans-serif;">Địa chỉ: @Model.Partner.Address</span></span></div>
+                <div><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Điện thoại: @Model.Partner.Phone</span></span></div>
+                <div style="border-bottom:1px dashed black;">
+                    <p><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;"><strong>Người bán:</strong> @Model.Transaction.Created_User</span></span></p>
                     <p><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;"></span></span></p>
                 </div>
                 <table style="width:100%;">
@@ -63,147 +67,136 @@
                         <td style="text-align:center;width:30%;"><strong><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">SL</span></span></strong></td>
                         <td style="text-align:right;"><strong><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Thành tiền</span></span></strong></td>
                     </tr>
-                    <tr>
-                        <td colspan="3"><span style="font-size:12px;"><span style="font-family:arial,helvetica,sans-serif;">Váy nữ Alcado (chiếc)</span></span></td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;"> 10,000 <span style="text-decoration: line-through;">12,500</span> </span></span></td>
-                        <td style="text-align:center;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">5</span></span></td>
-                        <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">50,000</span></span></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" style="border-bottom:1px dashed black;width:100%;"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><span style="font-size:12px;"><span style="font-family:arial,helvetica,sans-serif;">Quần jeans nữ Blue Exchange (chiếc)</span></span></td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;"> 6,000 <span style="text-decoration: line-through;">7,000</span> </span></span></td>
-                        <td style="text-align:center;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">1</span></span></td>
-                        <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">6,000</span></span></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" style="border-bottom:1px dashed black;width:100%;"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><span style="font-size:12px;"><span style="font-family:arial,helvetica,sans-serif;">iPhone</span></span></td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;"> 20,000 </span></span></td>
-                        <td style="text-align:center;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">1</span></span></td>
-                        <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">20,000</span></span></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" style="border-bottom:1px dashed black;width:100%;"></td>
-                    </tr>
+                        @{
+                            foreach (var billItem in Model.LstTransactionDetail)
+                            {
+                                var productUnit = Model.LstProductUnit.FirstOrDefault(p => p.Product_Code == billItem.Product_Code);
+                                if (productUnit != null)
+                                {
+                                    <tr>
+                                        <td colspan="3"><span style="font-size:12px;"><span style="font-family:arial,helvetica,sans-serif;">@productUnit.Name</span></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">@productUnit.Sell_Price<span style="text-decoration: line-through;">12,500</span> </span></span></td>
+                                        <td style="text-align:center;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">@billItem.Quantity</span></span></td>
+                                        <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">@billItem.Total</span></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" style="border-bottom:1px dashed black;width:100%;"></td>
+                                    </tr>
+                                }
+                                
+                            }
+                        }
                     </tbody>
                 </table>
-                <p><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Ghi chú</span></span></p>
+                <p><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Ghi chú: @Model.Transaction.Note</span></span></p>
                 <table style="width:100%;">
                     <tbody>
-                    <tr>
-                        <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Tổng tiền hàng:</span></span></td>
-                        <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">170,000</span></span></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Chiết khấu:</span></span></td>
-                        <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">100,000</span></span></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Tổng cộng:</span></span></td>
-                        <td style="text-align:right;"><strong><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">70,000</span></span></strong></td>
-                    </tr>
+                        <tr>
+                            <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Tổng tiền hàng:</span></span></td>
+                            <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">170,000</span></span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Chiết khấu:</span></span></td>
+                            <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">100,000</span></span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right;"><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">Tổng cộng:</span></span></td>
+                            <td style="text-align:right;"><strong><span style="font-size:11px;"><span style="font-family:arial,helvetica,sans-serif;">@Model.TransactionPayment.FirstOrDefault().Amount</span></span></strong></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
             @*<iframe frameborder="0" scrolling="yes" srcdoc="<style>
-    table {
-        page-break-inside: auto
-    }
+                    table {
+                        page-break-inside: auto
+                    }
 
-    tr {
-        page-break-inside: avoid;
-        page-break-after: auto
-    }
-</style>
-<table style=&quot;width:100%;&quot;>
-    <tbody>
-        <tr>
-            <td rowspan=&quot;3&quot;>&amp;nbsp;</td>
-            <td><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Tên cửa hàng</span></span></td>
-        </tr>
-        <tr>
-            <td><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Chi nhánh: Chi nhánh trung tâm</span></span></td>
-        </tr>
-        <tr>
-            <td><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Điện thoại: </span></span></td>
-        </tr>
-    </tbody>
-</table>
-<div style=&quot;border-bottom:1px dashed black;&quot;>&amp;nbsp;</div><div><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Ngày bán:  08/05/2014 08:56 </span></span></div><div style=&quot;text-align:center;&quot;>
-    <br /><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;><strong>HOÁ ĐƠN BÁN HÀNG</strong></span></span>
-    <br /><span style=&quot;font-size:10px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;><strong>HD003362</strong></span></span>
-</div><div><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;><strong>Khách hàng:</strong> Anh Hòa Q.1</span></span></div><div><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Địa chỉ: Số 10, Phổ Quang,Tân Bình, TPHCM</span></span></div><div><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Khu vực: Hồ Chí Minh - Quận Tân Bình</span></span></div><div><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Thời gian giao hàng:  31/12/2017 22:30 </span></span></div><div><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Điện thoại: </span></span></div><div style=&quot;border-bottom:1px dashed black;&quot;>
-    <p><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;><strong>Người bán:</strong> Nguyễn Hạnh Phúc</span></span></p>
-    <p><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;></span></span></p>
-</div>
-<table style=&quot;width:100%;&quot;>
-    <tbody>
-        <tr>
-            <td style=&quot;width:35%;&quot;><strong><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Đơn giá</span></span></strong></td>
-            <td style=&quot;text-align:center;width:30%;&quot;><strong><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>SL</span></span></strong></td>
-            <td style=&quot;text-align:right;&quot;><strong><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Thành tiền</span></span></strong></td>
-        </tr>
-        <tr>
-            <td colspan=&quot;3&quot;><span style=&quot;font-size:12px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Váy nữ Alcado (chiếc)</span></span></td>
-        </tr>
-        <tr>
-            <td><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;> 10,000 <span style=&quot;text-decoration: line-through;&quot;>12,500</span> </span></span></td>
-            <td style=&quot;text-align:center;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>5</span></span></td>
-            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>50,000</span></span></td>
-        </tr>
-        <tr>
-            <td colspan=&quot;3&quot; style=&quot;border-bottom:1px dashed black;width:100%;&quot;></td>
-        </tr><tr>
-            <td colspan=&quot;3&quot;><span style=&quot;font-size:12px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Quần jeans nữ Blue Exchange (chiếc)</span></span></td>
-        </tr>
-        <tr>
-            <td><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;> 6,000 <span style=&quot;text-decoration: line-through;&quot;>7,000</span> </span></span></td>
-            <td style=&quot;text-align:center;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>1</span></span></td>
-            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>6,000</span></span></td>
-        </tr>
-        <tr>
-            <td colspan=&quot;3&quot; style=&quot;border-bottom:1px dashed black;width:100%;&quot;></td>
-        </tr><tr>
-            <td colspan=&quot;3&quot;><span style=&quot;font-size:12px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>iPhone</span></span></td>
-        </tr>
-        <tr>
-            <td><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;> 20,000 </span></span></td>
-            <td style=&quot;text-align:center;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>1</span></span></td>
-            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>20,000</span></span></td>
-        </tr>
-        <tr>
-            <td colspan=&quot;3&quot; style=&quot;border-bottom:1px dashed black;width:100%;&quot;></td>
-        </tr>
-    </tbody>
-</table>
-<p><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Ghi chú</span></span></p>
-<table style=&quot;width:100%;&quot;>
-    <tbody>
-        <tr>
-            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Tổng tiền hàng:</span></span></td>
-            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>170,000</span></span></td>
-        </tr>
-        <tr>
-            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Chiết khấu:</span></span></td>
-            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>100,000</span></span></td>
-        </tr>
-        <tr>
-            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Tổng cộng:</span></span></td>
-            <td style=&quot;text-align:right;&quot;><strong><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>70,000</span></span></strong></td>
-        </tr>
-    </tbody>
-</table>"></iframe>*@
+                    tr {
+                        page-break-inside: avoid;
+                        page-break-after: auto
+                    }
+                </style>
+                <table style=&quot;width:100%;&quot;>
+                    <tbody>
+                        <tr>
+                            <td rowspan=&quot;3&quot;>&amp;nbsp;</td>
+                            <td><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Tên cửa hàng</span></span></td>
+                        </tr>
+                        <tr>
+                            <td><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Chi nhánh: Chi nhánh trung tâm</span></span></td>
+                        </tr>
+                        <tr>
+                            <td><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Điện thoại: </span></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style=&quot;border-bottom:1px dashed black;&quot;>&amp;nbsp;</div><div><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Ngày bán:  08/05/2014 08:56 </span></span></div><div style=&quot;text-align:center;&quot;>
+                    <br /><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;><strong>HOÁ ĐƠN BÁN HÀNG</strong></span></span>
+                    <br /><span style=&quot;font-size:10px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;><strong>HD003362</strong></span></span>
+                </div><div><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;><strong>Khách hàng:</strong> Anh Hòa Q.1</span></span></div><div><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Địa chỉ: Số 10, Phổ Quang,Tân Bình, TPHCM</span></span></div><div><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Khu vực: Hồ Chí Minh - Quận Tân Bình</span></span></div><div><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Thời gian giao hàng:  31/12/2017 22:30 </span></span></div><div><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Điện thoại: </span></span></div><div style=&quot;border-bottom:1px dashed black;&quot;>
+                    <p><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;><strong>Người bán:</strong> Nguyễn Hạnh Phúc</span></span></p>
+                    <p><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;></span></span></p>
+                </div>
+                <table style=&quot;width:100%;&quot;>
+                    <tbody>
+                        <tr>
+                            <td style=&quot;width:35%;&quot;><strong><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Đơn giá</span></span></strong></td>
+                            <td style=&quot;text-align:center;width:30%;&quot;><strong><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>SL</span></span></strong></td>
+                            <td style=&quot;text-align:right;&quot;><strong><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Thành tiền</span></span></strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan=&quot;3&quot;><span style=&quot;font-size:12px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Váy nữ Alcado (chiếc)</span></span></td>
+                        </tr>
+                        <tr>
+                            <td><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;> 10,000 <span style=&quot;text-decoration: line-through;&quot;>12,500</span> </span></span></td>
+                            <td style=&quot;text-align:center;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>5</span></span></td>
+                            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>50,000</span></span></td>
+                        </tr>
+                        <tr>
+                            <td colspan=&quot;3&quot; style=&quot;border-bottom:1px dashed black;width:100%;&quot;></td>
+                        </tr><tr>
+                            <td colspan=&quot;3&quot;><span style=&quot;font-size:12px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Quần jeans nữ Blue Exchange (chiếc)</span></span></td>
+                        </tr>
+                        <tr>
+                            <td><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;> 6,000 <span style=&quot;text-decoration: line-through;&quot;>7,000</span> </span></span></td>
+                            <td style=&quot;text-align:center;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>1</span></span></td>
+                            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>6,000</span></span></td>
+                        </tr>
+                        <tr>
+                            <td colspan=&quot;3&quot; style=&quot;border-bottom:1px dashed black;width:100%;&quot;></td>
+                        </tr><tr>
+                            <td colspan=&quot;3&quot;><span style=&quot;font-size:12px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>iPhone</span></span></td>
+                        </tr>
+                        <tr>
+                            <td><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;> 20,000 </span></span></td>
+                            <td style=&quot;text-align:center;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>1</span></span></td>
+                            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>20,000</span></span></td>
+                        </tr>
+                        <tr>
+                            <td colspan=&quot;3&quot; style=&quot;border-bottom:1px dashed black;width:100%;&quot;></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Ghi chú</span></span></p>
+                <table style=&quot;width:100%;&quot;>
+                    <tbody>
+                        <tr>
+                            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Tổng tiền hàng:</span></span></td>
+                            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>170,000</span></span></td>
+                        </tr>
+                        <tr>
+                            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Chiết khấu:</span></span></td>
+                            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>100,000</span></span></td>
+                        </tr>
+                        <tr>
+                            <td style=&quot;text-align:right;&quot;><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>Tổng cộng:</span></span></td>
+                            <td style=&quot;text-align:right;&quot;><strong><span style=&quot;font-size:11px;&quot;><span style=&quot;font-family:arial,helvetica,sans-serif;&quot;>70,000</span></span></strong></td>
+                        </tr>
+                    </tbody>
+                </table>"></iframe>*@
         </article>
     </section>
 </body>

@@ -19,5 +19,6 @@ namespace IPos.Models
         public Nullable<int> Quantity { get; set; }
         public Nullable<decimal> Price { get; set; }
         public Nullable<decimal> Total { get; set; }
+        public Nullable<decimal> Discount { get; set; }
     }
 }
