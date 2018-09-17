@@ -1,7 +1,6 @@
-﻿@model IPos.Controllers.ProductController.ListModel
-
-@{ 
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var _tree = IPos.Controllers.ProductController.GetCategoryTree();
 }
 
 <style>
@@ -14,41 +13,122 @@
     td {
         padding:0px;
     }
+
+    .custom-hover :hover {
+        cursor: pointer;
+    }
+
+    .custom-image-icon {
+        max-width:50px;
+        border:1px solid grey;
+        filter: opacity(50%);
+    }
+
+    hr {
+        margin: 10px 0px;
+    }
+
+    .custom-pager {
+        display:inline-block;
+        width:20px;
+        border-radius:4px;
+        text-align:center;
+        font-weight:bold;
+    }
+    .custom-pager :hover {
+        cursor: pointer;
+    }
+
 </style>
 
-<div class="row">
-    <div class="col-lg-2">
-        <input class="form-control" placeholder="Theo mã, tên hàng" />
-    </div>
-    <div class="col-lg-10">
-        <h4>
+<section id="content_wrapper" class="content-wrapper" style="padding-top:0px; margin-top:50px;">
+    <section class="content-header">
+        <h1>
             Hàng hóa
             <button class="btn btn-success pull-right" style="margin-left:10px;" onclick="export_product();"><i class="fa fa-sign-out"></i> Xuất file</button>
             <button class="btn btn-success pull-right" style="margin-left:10px;" onclick="new_product();"><i class="fa fa-plus"></i> Thêm mới</button>
-        </h4>
-        <table class="table table-responsive table-hover table-bordered">
-            <thead>
-                <tr>
-                    <th style="width:15%">Mã hàng hóa</th>
-                    <th style="width:55%">Tên hàng</th>
-                    <th style="width:10%">Giá bán</th>
-                    <th style="width:10%">Giá vốn</th>
-                    <th style="width:10%">Tồn kho</th>
-                </tr>
-            </thead>
-            @foreach (var product in Model.listItem)
-            {
-                <tr>
-                    <td>@product["CODE"]</td>
-                    <td>@product["NAME"]</td>
-                    <td style="text-align:right">@product["SELL_PRICE"]</td>
-                    <td style="text-align:right">@product["ORIGINAL_PRICE"]</td>
-                    <td style="text-align:right">@product["QUANTITY"]</td>
-                </tr>
-            }
-        </table>
-    </div>
-</div>
+        </h1>
+    </section>
+    <section class="content">
+        <div class="row">
+            <div class="col-lg-3">
+                <table>
+                    <tr>
+                        <td>
+                            <input class="form-control" placeholder="Tìm theo mã, tên hàng" id="product_search" onkeypress="return searchKeyPress(event);" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Tìm theo nhóm hàng
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="radio" id="product_category_all" name="product_search_category" value="-1" onchange="searchCategoryChange()" checked="checked" />
+                            <label for="product_category_all">Toàn bộ</label>
+                            <input id="product_search_category" style="display:none" value="-1" />
+                        </td>
+                    </tr>
+                    @{
+                        if (_tree.Count > 0)
+                        {
+                            foreach (var item in _tree)
+                            {
+                                string spaces = "";
+                                for (int i = 0; i < int.Parse(item["LEVEL"]); i++)
+                                {
+                                    spaces += "&nbsp;&nbsp;&nbsp;&nbsp;";
+                                }
+                                <tr>
+                                    <td>
+                                        @Html.Raw(spaces)
+                                        <input type="radio" id="product_category_@item["ID"]" name="product_search_category" value="@item["ID"]" onchange="searchCategoryChange()" />
+                                        <label for="product_category_@item["ID"]">@item["NAME"]</label>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                    <tr>
+                        <td>Số lượng hàng hóa mỗi trang</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select id="product_page_size" class="form-control" onchange="getAllProduct();">
+                                <option value="10" selected>10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-lg-9">
+                <table class="table table-responsive table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width:15%">Mã hàng hóa</th>
+                            <th style="width:55%">Tên hàng</th>
+                            <th style="width:10%">Giá bán</th>
+                            <th style="width:10%">Giá vốn</th>
+                            <th style="width:10%">Tồn kho</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataBody"></tbody>
+                </table>
+                <br />
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8" align="center" id="controller-content"></div>
+                    <div class="col-md-2">
+                        <label class="pull-right" id="total-content"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
 
 <div class="modal fade" id="createNewProduct" tabindex="-1" role="dialog" aria-labelledby="newModalLabel" aria-hidden="true" style="font-family:Arial">
     <div class="modal-dialog modal-lg">
@@ -76,7 +156,6 @@
                                         <select id="category_id" class="form-control">
                                             <option value="0" selected>-- Lựa chọn --</option>
                                             @{
-                                                var _tree = IPos.Controllers.ProductController.GetCategoryTree();
                                                 if (_tree.Count > 0)
                                                 {
                                                     foreach (var item in _tree)
@@ -263,7 +342,152 @@
     </div>
 </div>
 
+@section MyScript {
 <script>
+    $(document).ready(function () {
+        getAllProduct();
+    });
+
+    function searchKeyPress(e) {
+        if (e.keyCode == 13) {
+            getAllProduct();
+            return false;
+        }
+    }
+
+    function checkKeyPressPage(e) {
+        if (e && e.keyCode == 13) {
+            if (document.getElementById('changeCurrent') != null) {
+                var toPage = document.getElementById('changeCurrent').value;
+                changePage(toPage);
+            }
+        }
+    }
+
+    function changePage(toPage) {
+        document.getElementById('changeCurrent').value = toPage;
+        getAllProduct();
+    }
+
+    function searchCategoryChange() {
+        var _find_items = document.getElementsByName('product_search_category');
+        var _id = -1;
+        if (_find_items != null && _find_items.length > 0) {
+            for (var i = 0; i < _find_items.length; i++) {
+                if (_find_items[i] != null && _find_items[i].id != null && _find_items[i].id.indexOf('product_category_') == 0 && _find_items[i].checked) {
+                    _id = _find_items[i].value;
+                    break;
+                }
+            }
+        }
+        document.getElementById('product_search_category').value = _id;
+        getAllProduct();
+    }
+
+    function getAllProduct() {
+        var _searchStr = "";
+        if (document.getElementById("product_search") != null)
+            _searchStr = document.getElementById("product_search").value;
+        var _categoryId = -1;
+        if (document.getElementById("product_search_category") != null)
+            _categoryId = document.getElementById("product_search_category").value;
+        var _page = 1;
+        if (document.getElementById('changeCurrent') != null)
+            _page = document.getElementById('changeCurrent').value;
+        var _pageSize = 10;
+        if (document.getElementById('product_page_size') != null)
+            _pageSize = document.getElementById('product_page_size').value;
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("GetAllProduct", "Product")',
+            data: {
+                searchStr: _searchStr,
+                categoryId: _categoryId,
+                page: _page,
+                pageSize: _pageSize
+            },
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                if (data == null) {
+                    alert("Có lỗi xảy ra, vui lòng thử lại!")
+                }
+                else {
+                    loadDataToTable(data);
+                }
+            },
+            error: function (data) {
+                alert(data);
+                alert("Có lỗi xảy ra, vui lòng thử lại!")
+            }
+        });
+    }
+
+    function loadDataToTable(data) {
+        var _innerHtml = "";
+        for (var i in data.listItem) {
+            _innerHtml += '<tr><td colspan="5"><table style="width:100%"><tr class="custom-hover" onclick="toggle_product_info(\'' + data.listItem[i].CODE + '\');">';
+            _innerHtml += "<td style='width:15%'>" + data.listItem[i].CODE + "</td><td style='width:55%'>" + data.listItem[i].NAME + "</td>";
+            _innerHtml += "<td style='width:10%;text-align:right'>" + data.listItem[i].SELL_PRICE + "</td><td style='width:10%;text-align:right'>" + data.listItem[i].ORIGINAL_PRICE + "</td>";
+            _innerHtml += "<td style='width:10%;text-align:right'>" + data.listItem[i].QUANTITY + "</td></tr>";
+            _innerHtml += "<tr id='product_detail_" + data.listItem[i].CODE + "' name='product_detail' hidden><td colspan='5'><table style='width:100%'><tr><td><h3>" + data.listItem[i].NAME + "</h3>";
+            _innerHtml += "</td></tr><tr><td style='vertical-align:top; width:200px;'>";
+            if (data.listItem[i].IMAGE_1) {
+                _innerHtml += "<img id='image_preview_" + data.listItem[i].CODE + "' src='" + data.listItem[i].IMAGE_1 + "' style='width:200px;' />";
+            }
+            else {
+                _innerHtml += "<img src='~/Styles/Images/default-product.png' style='width:200px;' />";
+            }
+            _innerHtml += "</td><td style='vertical-align:top; padding-left:10px; width:80px;'><table>";
+            if (data.listItem[i].IMAGE_1) {
+                var count = 1;
+                while (data.listItem[i]["IMAGE_" + count]) {
+                    _innerHtml += '<tr><td style="padding-bottom:10px;"><img src="' + data.listItem[i]["IMAGE_" + count] + '" class="custom-image-icon" onclick="changePreview(\'' + data.listItem[i].CODE + '\', this.src);" /></td></tr>';
+                    count += 1;
+                }
+            }
+            else {
+                _innerHtml += "<tr><td><img src='~/Styles/Images/default-product.png' style='width:50px;' /></td></tr>";
+            }
+            _innerHtml += "</table></td><td style='vertical-align:top;padding-left:10px;'><table><tr>";
+            _innerHtml += "<td>Mã hàng hóa</td><td style='padding-left:5px'>: <b>" + data.listItem[i].CODE + "</b></td></tr>";
+            _innerHtml += "<tr><td colspan='2'><hr /></td></tr><tr><td>Nhóm hàng</td><td style='padding-left:5px'>: " + data.listItem[i].CATEGORY + "</td></tr>";
+            _innerHtml += "<tr><td colspan='2'><hr /></td></tr><tr><td>Giá bán</td><td style='padding-left:5px'>: " + data.listItem[i].SELL_PRICE + "</td></tr>";
+            _innerHtml += "<tr><td colspan='2'><hr /></td></tr><tr><td>Giá vốn</td><td style='padding-left:5px'>: " + data.listItem[i].ORIGINAL_PRICE + "</td></tr>";
+            _innerHtml += "<tr><td colspan='2'><hr /></td></tr><tr><td>Định mức tồn</td><td style='padding-left:5px'>: " + data.listItem[i].ORIGINAL_PRICE + "</td></tr></table></td></tr>";
+            _innerHtml += "<tr><td colspan='5'><button class='btn btn-default pull-right' style='margin-left:10px;' onclick='print_barcode();'><i class='fa fa-barcode'></i> In mã vạch</button>";
+            _innerHtml += "<button class='btn btn-success pull-right' style='margin-left:10px;' onclick='edit_product();'><i class='fa fa-edit'></i> Cập nhật</button></td></tr></table></td></tr></table></td></tr>";
+        }
+        document.getElementById("dataBody").innerHTML = _innerHtml;
+
+        _innerHtml = "";
+        if (document.getElementById('total-content') != null)
+            document.getElementById('total-content').innerHTML = "Tổng số : " + data.totalItem;
+
+        var _pageCount = Math.ceil(data.totalItem / data.pageSize);
+        if (document.getElementById('controller-content') != null) {
+            var _innercontrol = "";
+            if (data.currentPage > 1) {
+                _innercontrol += "<img src='@Url.Content("~/Styles/Images/first-left.png")' onclick='changePage(1);' /><img src='@Url.Content("~/Styles/Images/previous-left.png")'  onclick='changePage(";
+                _innercontrol += data.currentPage - 1;
+                _innercontrol += ");'/>";
+            }
+            _innercontrol += "Trang <input id='changeCurrent' align='right' style='width:30px' value='";
+            _innercontrol += data.currentPage;
+            _innercontrol += "' onkeypress='checkKeyPressPage(event)' />/ ";
+            _innercontrol += _pageCount;
+            if (data.currentPage < _pageCount) {
+                _innercontrol += "<img src='@Url.Content("~/Styles/Images/next-right.png")' onclick='changePage(";
+                _innercontrol += data.currentPage + 1;
+                _innercontrol += ");' /><img src='@Url.Content("~/Styles/Images/last-right.png")' onclick='changePage(";
+                _innercontrol += _pageCount;
+                _innercontrol += ");' />";
+            }
+
+            document.getElementById('controller-content').innerHTML = _innercontrol;
+        }
+    }
+
     function new_product() {
         $("#createNewProduct").modal('show');
     }
@@ -297,6 +521,27 @@
                 reader.readAsDataURL(files[0]);
             }
         }
+    }
+
+    function toggle_product_info(product_code) {
+        if (document.getElementById("product_detail_" + product_code).hidden == false)
+            document.getElementById("product_detail_" + product_code).hidden = true;
+        else {
+            collapseAll();
+            document.getElementById("product_detail_" + product_code).hidden = false;
+        }
+    }
+
+    function collapseAll() {
+        var _all_product_detail = document.getElementsByName("product_detail");
+        for (var i in _all_product_detail) {
+            if (_all_product_detail[i])
+                _all_product_detail[i].hidden = true;
+        }
+    }
+
+    function changePreview(product_code, image_src) {
+        document.getElementById("image_preview_" + product_code).src = image_src;
     }
 
     function export_product() {
@@ -353,7 +598,7 @@
                     if (data.indexOf("ERR:") == 0)
                         alert(data.replace("ERR:", ""));
                     else
-                        alert(data);
+                        location.reload();
                 }
             },
             error: function (data) {
@@ -447,4 +692,9 @@
             document.getElementById("new_category_name").focus();
         }
     }
+
+    function print_barcode() {
+        // PHUONGNN - TODO
+    }
 </script>
+}

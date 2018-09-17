@@ -200,29 +200,49 @@ namespace IPos.Controllers
             }
         }
 
-        public ActionResult ListProduct(/*string searchStr, int categoryId, int page, int pageSize*/)
+        public ActionResult List()
         {
-            string searchStr = "";
-            int categoryId = -1;
-            int page = 0;
-            int pageSize = 10;
+            return View();
+        }
+
+        private void getCategoryRescursive(IPosEntities ctx, int categoryId, List<int> _lst)
+        {
+            if (!_lst.Contains(categoryId)) _lst.Add(categoryId);
+            var _find = ctx.Product_Categories.Where(b => b.Parent_ID == categoryId).Select(b => b.ID);
+            if (_find.Any())
+            {
+                foreach (int id in _find)
+                {
+                    getCategoryRescursive(ctx, id, _lst);
+                }
+            }
+        }
+
+        public JsonResult GetAllProduct(string searchStr, int categoryId, int page, int pageSize)
+        {
             using (IPosEntities ctx = new IPosEntities())
             {
-                var _find_product = from product in ctx.Products.Where(b => (searchStr == "" || b.Name.ToLower().Contains(searchStr.ToLower())) && (categoryId == -1 || b.Product_Category_ID == categoryId))
-                                    from unit in ctx.Product_Unit.Where(b => b.Product_ID == product.ID && b.Product_Code == b.Base_Product_Code)
+                searchStr = searchStr.ToLower();
+                List<int> _all_category_rescursive = new List<int>();
+                if (categoryId > 0)
+                    getCategoryRescursive(ctx, categoryId, _all_category_rescursive);
+
+                var _find_product = from product in ctx.Products.Where(b => (searchStr == "" || b.Name.ToLower().Contains(searchStr) || b.Base_Product_Code.ToLower() == searchStr) && (categoryId == -1 || _all_category_rescursive.Contains((int)b.Product_Category_ID)))
+                                    join unit in ctx.Product_Unit.Where(b => b.Product_Code == b.Base_Product_Code) on product.ID equals unit.Product_ID
                                     select new
                                     {
                                         ID = unit.Product_ID,
                                         CODE = unit.Product_Code,
                                         NAME = product.Name,
                                         SELL_PRICE = unit.Sell_Price,
-                                        ORIGINAL_PRICE = unit.Original_Price
+                                        ORIGINAL_PRICE = unit.Original_Price,
+                                        CATEGORY_ID = product.Product_Category_ID
                                     };
 
                 int totalItem = _find_product.Count();
                 int totalPage = (int)Math.Ceiling((decimal)(totalItem / pageSize));
 
-                _find_product = _find_product.OrderByDescending(b => b.CODE).Skip(page * pageSize).Take(pageSize);
+                _find_product = _find_product.OrderByDescending(b => b.CODE).Skip((page - 1) * pageSize).Take(pageSize);
                 List<Dictionary<string, string>> _list_product = new List<Dictionary<string, string>>();
                 foreach (var product in _find_product)
                 {
@@ -232,6 +252,26 @@ namespace IPos.Controllers
                     _info.Add("SELL_PRICE", product.SELL_PRICE.GetValueOrDefault(0).ToString("N0"));
                     _info.Add("ORIGINAL_PRICE", product.ORIGINAL_PRICE.GetValueOrDefault(0).ToString("N0"));
                     _info.Add("QUANTITY", ProductCurrentQuantity(product.ID.GetValueOrDefault(0)).ToString("N0"));
+
+                    _info.Add("CATEGORY", "");
+                    if (product.CATEGORY_ID != null && product.CATEGORY_ID > 0)
+                    {
+                        var _find_category = ctx.Product_Categories.Where(b => b.ID == product.CATEGORY_ID);
+                        if (_find_category.Any())
+                            _info["CATEGORY"] = _find_category.First().Name;
+                    }
+
+                    var _find_image = ctx.Product_Image.Where(b => b.Product_ID == product.ID).OrderBy(b => b.Number);
+                    if (_find_image.Any())
+                    {
+                        int count = 1;
+                        foreach (var image in _find_image)
+                        {
+                            _info.Add("IMAGE_" + count, image.Contents);
+                            count += 1;
+                        }
+                    }
+
                     _list_product.Add(_info);
                 }
 
@@ -240,8 +280,9 @@ namespace IPos.Controllers
                 _listModel.totalPage = totalPage;
                 _listModel.currentPage = page;
                 _listModel.listItem = _list_product;
+                _listModel.pageSize = pageSize;
 
-                return View(_listModel);
+                return Json(_listModel, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -281,6 +322,7 @@ namespace IPos.Controllers
             public int totalPage { get; set; }
             public int currentPage { get; set; }
             public List<Dictionary<string, string>> listItem { get; set; }
+            public int pageSize { get; set; }
         }
     }
 }

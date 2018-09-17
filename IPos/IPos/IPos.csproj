@@ -1041,6 +1041,11 @@
     <Content Include="Styles\Content\tether\tether.css" />
     <Content Include="Styles\Content\tether\tether.min.css" />
     <Content Include="Styles\Content\toastr.min.css" />
+    <Content Include="Styles\Images\default-product.png" />
+    <Content Include="Styles\Images\first-left.png" />
+    <Content Include="Styles\Images\last-right.png" />
+    <Content Include="Styles\Images\next-right.png" />
+    <Content Include="Styles\Images\previous-left.png" />
     <Content Include="Styles\Scripts\ais.js" />
     <Content Include="Styles\Scripts\toastr.min.js" />
     <Content Include="Styles\fonts\fontawesome-webfont.svg" />
@@ -1287,7 +1292,7 @@
     <Content Include="Styles\Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Views\Exchange\BillItem_Partial.cshtml" />
     <Content Include="Views\Product\New.cshtml" />
-    <Content Include="Views\Product\ListProduct.cshtml" />
+    <Content Include="Views\Product\List.cshtml" />
     <Content Include="Views\Printer\PrintBarcode.cshtml" />
     <Content Include="Views\Printer\PrintBill.cshtml" />
     <Content Include="Views\Printer\PrintProduct.cshtml" />
