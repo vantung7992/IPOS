@@ -52,6 +52,7 @@ create table Transaction_Detail(
 	Transaction_Code varchar(50),
 	Product_Code varchar(50),
 	Quantity int,
+	Discount decimal(10,0),
 	Price decimal(18,0),
 	Total decimal(18,0),
 	constraint Transaction_Detail_P primary key(Transaction_Code,Product_Code)
